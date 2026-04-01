@@ -54,8 +54,9 @@ async function startServer() {
 
     // ─── Session ───────────────────────────────────────────────────────────────
     const FileStore = require('session-file-store')(session);
+    const sessionPath = process.env.VERCEL === '1' ? '/tmp/sessions' : path.join(__dirname, 'db', 'sessions');
     app.use(session({
-        store: new FileStore({ path: path.join(__dirname, 'db', 'sessions'), ttl: 86400, retries: 0 }),
+        store: new FileStore({ path: sessionPath, ttl: 86400, retries: 0 }),
         secret: process.env.SESSION_SECRET || 'fallback-secret-GANTI-DI-.env',
         resave: false,
         saveUninitialized: false,
@@ -72,6 +73,11 @@ async function startServer() {
 
     // ─── Static Files ──────────────────────────────────────────────────────────
     app.use(express.static(path.join(__dirname, 'public')));
+    if (process.env.VERCEL === '1') {
+        app.use('/uploads', express.static('/tmp/uploads'));
+    } else {
+        app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+    }
 
     // ─── Routes ────────────────────────────────────────────────────────────────
     const authRoutes = require('./routes/auth');

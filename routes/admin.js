@@ -12,7 +12,12 @@ const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../public/uploads/gallery');
+        let uploadDir;
+        if (process.env.VERCEL === '1') {
+            uploadDir = path.join('/tmp', 'uploads', 'gallery');
+        } else {
+            uploadDir = path.join(__dirname, '../public/uploads/gallery');
+        }
         fs.mkdirSync(uploadDir, { recursive: true });
         cb(null, uploadDir);
     },

@@ -114,7 +114,12 @@ const { v4: uuidv4 } = require('uuid');
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../public/uploads/capsules');
+        let uploadDir;
+        if (process.env.VERCEL === '1') {
+            uploadDir = path.join('/tmp', 'uploads', 'capsules');
+        } else {
+            uploadDir = path.join(__dirname, '../public/uploads/capsules');
+        }
         fs.mkdirSync(uploadDir, { recursive: true });
         cb(null, uploadDir);
     },

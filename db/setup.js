@@ -6,7 +6,8 @@
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = path.join(__dirname, 'alfityan.db');
+const isVercel = process.env.VERCEL === '1';
+const DB_PATH = isVercel ? '/tmp/alfityan.db' : path.join(__dirname, 'alfityan.db');
 
 let _SQL = null;  // sql.js module (loaded once)
 let _db = null;  // in-memory Database instance (singleton)
