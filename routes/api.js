@@ -106,4 +106,83 @@ router.get('/gallery', (req, res) => {
     res.json(images);
 });
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
+const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../public/uploads/capsules');
+        fs.mkdirSync(uploadDir, { recursive: true });
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, `${uuidv4()}${ext}`);
+    },
+});
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (!ALLOWED_MIME.includes(file.mimetype)) {
+            return cb(new Error('Hanya gambar (JPG, PNG, WEBP, GIF) yang diizinkan.'));
+        }
+        cb(null, true);
+    }
+});
+
+// GET /api/capsules — daftar kapsul dan isinya (jika sudah buka)
+router.get('/capsules', (req, res) => {
+    const db = getDb();
+    const capsules = db.prepare('SELECT * FROM time_capsules ORDER BY created_at DESC').all();
+
+    const now = new Date();
+    const result = capsules.map(c => {
+        const shouldAutoOpen = !c.is_open && c.unlock_at && new Date(c.unlock_at) <= now;
+        if (shouldAutoOpen) {
+            c.is_open = 1;
+            c.opened_at = c.unlock_at;
+            try {
+                db.prepare("UPDATE time_capsules SET is_open = 1, opened_at = ? WHERE id = ?").run(c.unlock_at, c.id);
+            } catch (e) {}
+        }
+        
+        if (c.is_open) {
+            c.entries = db.prepare('SELECT id, author_name, message, image_filename, created_at FROM capsule_entries WHERE capsule_id = ? ORDER BY created_at ASC').all(c.id);
+        } else {
+            c.entry_count = db.prepare('SELECT COUNT(*) as cnt FROM capsule_entries WHERE capsule_id = ?').get(c.id).cnt || 0;
+        }
+        return c;
+    });
+
+    db.close();
+    res.json(result);
+});
+
+// POST /api/capsules/:id/entries — submit pesan & foto oleh anggota
+router.post('/capsules/:id/entries', (req, res, next) => {
+    upload.single('image')(req, res, (err) => {
+        if (err) return res.json({ success: false, message: err.message });
+        next();
+    });
+}, (req, res) => {
+    const { author_name, message } = req.body;
+    if (!author_name || !author_name.trim()) return res.json({ success: false, message: 'Namamu wajib diisi.' });
+    if (!message || !message.trim()) return res.json({ success: false, message: 'Pesan/harapan wajib diisi.' });
+
+    const db = getDb();
+    const capsule = db.prepare('SELECT id, is_open FROM time_capsules WHERE id = ?').get(req.params.id);
+    if (!capsule) { db.close(); return res.json({ success: false, message: 'Kapsul tidak ditemukan.' }); }
+    if (capsule.is_open) { db.close(); return res.json({ success: false, message: 'Kapsul sudah terbuka, tidak bisa menambah isi lagi.' }); }
+
+    const filename = req.file ? req.file.filename : null;
+    db.prepare('INSERT INTO capsule_entries (capsule_id, author_name, message, image_filename) VALUES (?, ?, ?, ?)')
+      .run(capsule.id, author_name.trim().substring(0, 50), message.trim().substring(0, 5000), filename);
+    db.close();
+    res.json({ success: true });
+});
+
 module.exports = router;

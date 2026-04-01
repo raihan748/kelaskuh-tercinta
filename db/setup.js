@@ -123,6 +123,25 @@ async function initDb() {
       is_kisi_mode INTEGER NOT NULL DEFAULT 0
     );
     INSERT OR IGNORE INTO app_settings (id, is_kisi_mode) VALUES (1, 0);
+    CREATE TABLE IF NOT EXISTS time_capsules (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      message TEXT NOT NULL,
+      unlock_at TEXT,
+      is_open INTEGER NOT NULL DEFAULT 0,
+      opened_at TEXT,
+      created_by TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now','localtime'))
+    );
+    CREATE TABLE IF NOT EXISTS capsule_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      capsule_id INTEGER NOT NULL,
+      author_name TEXT NOT NULL,
+      message TEXT NOT NULL,
+      image_filename TEXT,
+      created_at TEXT DEFAULT (datetime('now','localtime')),
+      FOREIGN KEY (capsule_id) REFERENCES time_capsules(id) ON DELETE CASCADE
+    );
   `);
 
   flush();

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kapsul Waktu — Admin Al-Fityan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="/admin.css" />
+    <style>
+        body { background: #0a0f1e; color: #e2e8f0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; }
+        .capsule-locked { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.25) !important; }
+        .capsule-open { background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.35) !important; }
+        .message-preview { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <aside class="w-56 bg-gray-900/90 border-r border-gray-800 flex flex-col flex-shrink-0 fixed left-0 top-0 bottom-0 z-40">
+        <div class="p-5 border-b border-gray-800">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black">AF</div>
+                <div>
+                    <div class="text-white font-bold text-sm">Al-Fityan</div>
+                    <div class="text-gray-500 text-xs">Admin Panel</div>
+                </div>
+            </div>
+            <div class="mt-3 px-2 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+                <div class="text-indigo-300 text-xs">Login sebagai:</div>
+                <div id="currentUser" class="text-white text-sm font-bold">—</div>
+            </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-1">
+            <a href="/admin/dashboard" class="sidebar-link"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+            <a href="/admin/students" class="sidebar-link"><i class="fa-solid fa-users"></i>Siswa</a>
+            <a href="/admin/assignments" class="sidebar-link"><i class="fa-solid fa-book-open"></i>Tugas</a>
+            <a href="/admin/grades" class="sidebar-link"><i class="fa-solid fa-star"></i>Nilai</a>
+            <a href="/admin/forum" class="sidebar-link"><i class="fa-solid fa-comments"></i>Forum</a>
+            <div class="space-y-1">
+                <div class="text-gray-600 text-xs font-bold uppercase px-3 pt-3 pb-1">Owner Only</div>
+                <a href="/admin/gallery" class="sidebar-link"><i class="fa-solid fa-images"></i>Gallery</a>
+                <a href="/admin/capsule" class="sidebar-link active"><i class="fa-solid fa-hourglass-half"></i>Kapsul Waktu</a>
+                <a href="/admin/logs" class="sidebar-link"><i class="fa-solid fa-scroll"></i>Admin Logs</a>
+                <a href="/admin/access" class="sidebar-link"><i class="fa-solid fa-key"></i>Access Manager</a>
+            </div>
+        </nav>
+        <div class="p-3 border-t border-gray-800 space-y-1">
+            <a href="/kapsul-waktu.html" target="_blank" class="sidebar-link"><i class="fa-solid fa-eye"></i>Lihat Publik</a>
+            <a href="/auth/logout" class="sidebar-link text-red-400"><i class="fa-solid fa-sign-out-alt"></i>Logout</a>
+        </div>
+    </aside>
+
+    <main class="ml-56 flex-1 p-6">
+        <div class="mb-6">
+            <h1 class="text-2xl font-black text-white">⏳ Kapsul Waktu</h1>
+            <p class="text-gray-400 text-sm">Buat pesan tersegel yang akan terbuka di waktu tertentu, atau saat Owner menekan tombol buka.</p>
+        </div>
+
+        <!-- Form Buat Kapsul -->
+        <div class="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6">
+            <h2 class="text-base font-bold text-white mb-4"><i class="fa-solid fa-plus mr-2 text-indigo-400"></i>Buat Kapsul Baru</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="text-xs text-gray-400 font-semibold uppercase mb-1 block">Judul Kapsul *</label>
+                    <input id="cap-title" type="text" placeholder="cth: Pesan untuk Kelulusan 2027" class="form-input" maxlength="150" />
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 font-semibold uppercase mb-1 block">Waktu Buka Otomatis <span class="text-gray-600 normal-case font-normal">(opsional)</span></label>
+                    <input id="cap-unlock" type="datetime-local" class="form-input" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="text-xs text-gray-400 font-semibold uppercase mb-1 block">Isi Pesan Kapsul *</label>
+                <textarea id="cap-message" rows="5" placeholder="Tulis pesan rahasia untuk dibuka nanti..." class="form-input resize-none" maxlength="5000"></textarea>
+                <div class="text-xs text-gray-600 mt-1 text-right"><span id="char-count">0</span>/5000 karakter</div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="save-btn" onclick="saveCapsule()" class="btn btn-primary">
+                    <i class="fa-solid fa-seal"></i>Segel & Simpan Kapsul
+                </button>
+                <p id="save-msg" class="text-sm hidden"></p>
+            </div>
+            <p class="text-gray-600 text-xs mt-3">
+                <i class="fa-solid fa-info-circle mr-1"></i>
+                Jika waktu buka tidak diisi, kapsul hanya bisa dibuka secara manual oleh Owner melalui tombol "Buka Sekarang".
+            </p>
+        </div>
+
+        <!-- Daftar Kapsul -->
+        <div class="bg-gray-900 rounded-2xl border border-gray-800 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-bold text-white"><i class="fa-solid fa-list mr-2 text-amber-400"></i>Daftar Kapsul</h2>
+                <button onclick="loadCapsules()" class="btn btn-secondary text-xs py-1.5 px-3"><i class="fa-solid fa-refresh"></i>Refresh</button>
+            </div>
+            <div id="capsule-list">
+                <div class="text-center text-gray-500 py-8"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Memuat...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Lihat Isi -->
+    <div id="view-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-lg w-full relative">
+            <button onclick="closeViewModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white text-xl leading-none">✕</button>
+            <div id="view-badge" class="mb-3"></div>
+            <h3 id="view-title" class="text-lg font-bold text-white mb-1"></h3>
+            <p id="view-meta" class="text-xs text-gray-500 mb-4"></p>
+            <div id="view-message" class="bg-gray-800 rounded-xl p-4 text-sm text-gray-200 whitespace-pre-wrap word-break leading-relaxed max-h-64 overflow-y-auto"></div>
+            <p id="view-opened" class="text-xs text-amber-400 mt-3"></p>
+        </div>
+    </div>
+
+    <script>
+        function fmtDate(str) {
+            if (!str) return '—';
+            return new Date(str).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+        }
+        function countdown(str) {
+            if (!str) return null;
+            const diff = new Date(str) - new Date();
+            if (diff <= 0) return null;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            if (d > 0) return `${d} hari ${h} jam lagi`;
+            if (h > 0) return `${h} jam ${m} menit lagi`;
+            return `${m} menit lagi`;
+        }
+
+        // char counter
+        document.getElementById('cap-message').addEventListener('input', function() {
+            document.getElementById('char-count').textContent = this.value.length;
+        });
+
+        async function saveCapsule() {
+            const title = document.getElementById('cap-title').value.trim();
+            const message = document.getElementById('cap-message').value.trim();
+            const unlock_at = document.getElementById('cap-unlock').value;
+            const msg = document.getElementById('save-msg');
+
+            if (!title) return showMsg(msg, 'Judul wajib diisi!', '#ef4444');
+            if (!message) return showMsg(msg, 'Isi pesan wajib diisi!', '#ef4444');
+
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>Menyimpan...';
+
+            const r = await fetch('/admin/api/capsules', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ title, message, unlock_at: unlock_at || null })
+            });
+            const d = await r.json();
+            btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-seal"></i>Segel & Simpan Kapsul';
+
+            if (d.success) {
+                showMsg(msg, '✅ Kapsul berhasil dibuat dan disegel!', '#10b981');
+                document.getElementById('cap-title').value = '';
+                document.getElementById('cap-message').value = '';
+                document.getElementById('cap-unlock').value = '';
+                document.getElementById('char-count').textContent = '0';
+                loadCapsules();
+            } else {
+                showMsg(msg, d.message || 'Gagal menyimpan.', '#ef4444');
+            }
+        }
+
+        async function openCapsule(id, title) {
+            if (!confirm(`Buka kapsul "${title}" sekarang?\n\nSetelah dibuka, isinya akan terlihat oleh semua orang di halaman publik.`)) return;
+            const r = await fetch(`/admin/api/capsules/${id}/open`, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            });
+            const d = await r.json();
+            if (d.success) loadCapsules();
+            else alert(d.message || 'Gagal membuka kapsul.');
+        }
+
+        async function deleteCapsule(id, title) {
+            if (!confirm(`Hapus kapsul "${title}"?\n\nKapsul yang sudah dihapus tidak dapat dikembalikan.`)) return;
+            await fetch(`/admin/api/capsules/${id}`, {
+                method: 'DELETE', headers: { 'Accept': 'application/json' }
+            });
+            loadCapsules();
+        }
+
+        function viewCapsule(c) {
+            document.getElementById('view-badge').innerHTML = c.is_open
+                ? '<span class="inline-flex items-center gap-1 text-xs font-bold uppercase px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">🔓 Terbuka</span>'
+                : '<span class="inline-flex items-center gap-1 text-xs font-bold uppercase px-3 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">🔒 Tersegel</span>';
+            document.getElementById('view-title').textContent = c.title;
+            document.getElementById('view-meta').textContent = `Dibuat oleh ${c.created_by} • ${fmtDate(c.created_at)}`;
+            document.getElementById('view-message').textContent = c.message;
+            document.getElementById('view-opened').textContent = c.opened_at ? `🕐 Dibuka: ${fmtDate(c.opened_at)}` : (c.unlock_at ? `⏰ Jadwal buka: ${fmtDate(c.unlock_at)}` : '🔑 Manual trigger oleh Owner');
+            const modal = document.getElementById('view-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeViewModal() {
+            const modal = document.getElementById('view-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function loadCapsules() {
+            const list = document.getElementById('capsule-list');
+            const r = await fetch('/admin/api/capsules', { headers: { 'Accept': 'application/json' } });
+            const capsules = await r.json();
+
+            if (!capsules.length) {
+                list.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada kapsul waktu yang dibuat.</div>';
+                return;
+            }
+
+            list.innerHTML = capsules.map(c => {
+                const cd = countdown(c.unlock_at);
+                return `
+                <div class="rounded-xl border p-4 mb-3 ${c.is_open ? 'capsule-open' : 'capsule-locked'}">
+                    <div class="flex items-start gap-3">
+                        <div class="text-2xl mt-0.5">${c.is_open ? '🔓' : '🔒'}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-white truncate">${escHtml(c.title)}</span>
+                                ${c.is_open
+                                    ? '<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 flex-shrink-0">Terbuka</span>'
+                                    : '<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex-shrink-0">Tersegel</span>'}
+                            </div>
+                            <div class="text-xs text-gray-500 mb-2">Dibuat ${fmtDate(c.created_at)}</div>
+                            <div class="text-sm text-gray-400 message-preview">${escHtml(c.message)}</div>
+                            ${c.is_open
+                                ? `<div class="text-xs text-amber-400 mt-2">🕐 Dibuka: ${fmtDate(c.opened_at)}</div>`
+                                : `<div class="text-xs text-indigo-400 mt-2">${c.unlock_at
+                                    ? `⏰ ${cd ? `Buka dalam ${cd}` : 'Sudah lewat jadwal — klik buka manual'} <span class="text-gray-600">• ${fmtDate(c.unlock_at)}</span>`
+                                    : '🔑 Manual trigger — belum ada jadwal otomatis'}</div>`}
+                        </div>
+                        <div class="flex flex-col gap-2 flex-shrink-0">
+                            <button onclick='viewCapsule(${JSON.stringify(c)})' class="btn btn-secondary text-xs py-1.5 px-3" title="Lihat isi">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            ${!c.is_open ? `<button onclick="openCapsule(${c.id}, '${escJs(c.title)}')" class="btn btn-primary text-xs py-1.5 px-3" style="background:linear-gradient(135deg,#f59e0b,#d97706)" title="Buka sekarang">
+                                <i class="fa-solid fa-lock-open"></i>
+                            </button>` : ''}
+                            <button onclick="deleteCapsule(${c.id}, '${escJs(c.title)}')" class="btn btn-danger text-xs py-1.5 px-3" title="Hapus">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showMsg(el, text, color) {
+            el.textContent = text; el.style.color = color; el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 5000);
+        }
+        function escHtml(s) {
+            if (!s) return '';
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        function escJs(s) {
+            if (!s) return '';
+            return s.replace(/'/g, "\\'").replace(/\n/g, ' ');
+        }
+
+        async function init() {
+            const me = await (await fetch('/auth/me')).json();
+            if (!me.user) return (window.location.href = '/login.html');
+            if (me.user.role !== 'owner') return (window.location.href = '/admin/dashboard?error=forbidden');
+            document.getElementById('currentUser').textContent = me.user.username + ' 👑';
+            loadCapsules();
+        }
+        init();
+    </script>
+</body>
+</html>

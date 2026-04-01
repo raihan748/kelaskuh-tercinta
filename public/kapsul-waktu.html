@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapsul Waktu — 8B Ahmad bin Hambal</title>
+    <meta name="description" content="Kapsul waktu kolektif kelas 8B Ahmad bin Hambal SMPIT Al-Fityan.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #070b14; --surface: #0d1425; --surface2: #121b2e;
+            --border: rgba(99,102,241,0.18); --accent: #6366f1; --accent2: #a78bfa;
+            --gold: #f59e0b; --gold2: #fcd34d; --text: #e2e8f0; --muted: #64748b;
+            --locked-bg: rgba(99,102,241,0.06); --open-bg: rgba(245,158,11,0.08);
+        }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+        /* Starfield */
+        #stars { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+        .star { position: absolute; border-radius: 50%; background: #fff; animation: twinkle var(--d, 3s) infinite var(--delay, 0s) ease-in-out alternate; }
+        @keyframes twinkle { from { opacity: 0.05; } to { opacity: 0.7; } }
+
+        /* Nav & Hero */
+        nav { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(7,11,20,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+        .nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.1rem; color: var(--accent2); text-decoration: none; }
+        .nav-back { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-back:hover { color: var(--text); }
+        .hero { position: relative; z-index: 1; text-align: center; padding: 4rem 2rem 3rem; }
+        .hero-icon { font-size: 4rem; display: block; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; background: linear-gradient(135deg, var(--gold2), var(--gold), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { color: var(--muted); margin-top: 0.75rem; font-size: 1.05rem; max-width: 600px; margin-inline: auto; line-height: 1.6; }
+
+        /* Grid */
+        .container { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+        .capsule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+        /* Card */
+        .capsule-card { background: var(--surface); border: 1px solid var(--border); border-radius: 1.5rem; padding: 2rem; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-col; }
+        .capsule-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .capsule-card.locked { background: var(--locked-bg); border-color: rgba(99,102,241,0.25); }
+        .capsule-card.opened { background: var(--open-bg); border-color: rgba(245,158,11,0.35); cursor: pointer; }
+
+        .capsule-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 99px; margin-bottom: 1rem; }
+        .badge-locked { background: rgba(99,102,241,0.15); color: var(--accent2); border: 1px solid rgba(99,102,241,0.3); }
+        .badge-open { background: rgba(245,158,11,0.15); color: var(--gold2); border: 1px solid rgba(245,158,11,0.35); }
+
+        .capsule-title { font-size: 1.3rem; font-weight: 700; mb: 0.5rem; }
+        .capsule-desc { font-size: 0.9rem; color: var(--text); line-height: 1.6; margin: 0.5rem 0 1.5rem; opacity: 0.8; }
+        
+        .capsule-stats { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 0.8rem; border: none; cursor: pointer; transition: all 0.2s; width: 100%; font-family: inherit; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-gold { background: linear-gradient(135deg, var(--gold2), var(--gold)); color: #000; box-shadow: 0 4px 15px rgba(245,158,11,0.3); }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(245,158,11,0.4); }
+
+        /* Form Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 1.5rem; padding: 2.5rem; max-width: 500px; width: 100%; position: relative; animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        @keyframes modalIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+        .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; }
+        .modal-close:hover { color: var(--text); }
+        
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-input { width: 100%; padding: 0.9rem 1rem; border-radius: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: var(--accent); background: rgba(0,0,0,0.4); }
+        textarea.form-input { resize: vertical; min-height: 100px; }
+
+        /* Immersive Wall (For opened capsule) */
+        #wall-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: #070b14; overflow-y: auto; overflow-x: hidden; }
+        #wall-overlay.active { display: block; }
+        .wall-header { position: sticky; top: 0; z-index: 10; padding: 1.5rem 2rem; background: rgba(7,11,20,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(245,158,11,0.2); display: flex; justify-content: space-between; align-items: center; }
+        .wall-title { font-size: 1.5rem; font-weight: 800; color: var(--gold2); }
+        .wall-close { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; }
+        .wall-close:hover { background: rgba(255,255,255,0.2); }
+        
+        .masonry { padding: 2rem; column-count: 3; column-gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
+        @media (max-width: 1024px) { .masonry { column-count: 2; } }
+        @media (max-width: 640px) { .masonry { column-count: 1; padding: 1rem; } }
+        
+        .entry-card { background: var(--surface2); border: 1px solid rgba(245,158,11,0.15); border-radius: 1.25rem; padding: 1.5rem; margin-bottom: 1.5rem; break-inside: avoid; animation: fadeInUp 0.5s ease backwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .entry-author { font-weight: 700; font-size: 1.1rem; color: var(--gold); mb: 0.3rem; display: flex; align-items: center; gap: 0.5rem; }
+        .entry-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 1rem; }
+        .entry-msg { font-size: 1rem; line-height: 1.6; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+        .entry-img { width: 100%; border-radius: 0.8rem; margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div id="stars"></div>
+
+    <nav>
+        <a class="nav-logo" href="/"><span>⏳</span> Kapsul Waktu</a>
+        <a class="nav-back" href="/">← Kembali ke Portal</a>
+    </nav>
+
+    <div class="hero">
+        <span class="hero-icon">📦</span>
+        <h1>Kapsul Waktu Kelas 8B</h1>
+        <p>Titipkan pesan, harapan, dan fotomu ke dalam Kapsul Waktu. Kapsul ini tersegel rapat dan baru bisa dibuka saat waktu yang ditentukan tiba!</p>
+    </div>
+
+    <div class="container">
+        <div class="capsule-grid" id="capsule-grid">
+            <div style="text-align:center; padding: 3rem; grid-column: 1/-1; color: var(--muted)">⏳ Memutar waktu...</div>
+        </div>
+    </div>
+
+    <!-- Modal Form Submit -->
+    <div class="modal-overlay" id="submit-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeSubmitModal()">✕</button>
+            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text)" id="form-capsule-title">Titipkan Pesan</h2>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">Pesan dan fotomu akan tersegel otomatis. Tidak ada yang bisa membacanya sebelum kapsul resmi dibuka.</p>
+            
+            <form id="capsule-form" onsubmit="submitEntry(event)">
+                <input type="hidden" id="entry-capsule-id" />
+                <div class="form-group">
+                    <label class="form-label">Nama Kamu</label>
+                    <input type="text" id="entry-name" class="form-input" placeholder="Tulis namamu..." required maxlength="50" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harapan / Pesan Memori</label>
+                    <textarea id="entry-msg" class="form-input" placeholder="Tulis sesuatu untuk masa depan..." required maxlength="5000"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Foto Kenangan (Opsional)</label>
+                    <input type="file" id="entry-img" class="form-input" accept="image/jpeg,image/png,image/webp,image/gif" />
+                </div>
+                <div id="submit-error" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem; text-align: center; display: none;"></div>
+                <button type="submit" class="btn btn-primary" id="submit-btn"><i class="fa-solid fa-paper-plane"></i> Segel Pesanku</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Immersive Wall -->
+    <div id="wall-overlay">
+        <div class="wall-header">
+            <div class="wall-title" id="wall-title">Kapsul Terbuka</div>
+            <button class="wall-close" onclick="closeWall()"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="masonry" id="wall-masonry"></div>
+    </div>
+
+    <script>
+        // Stars background
+        const starsEl = document.getElementById('stars');
+        for (let i = 0; i < 120; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2.5 + 0.5;
+            s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--delay:${(Math.random()*4).toFixed(1)}s;`;
+            starsEl.appendChild(s);
+        }
+
+        // Utils
+        const fmtDate = d => d ? new Date(d).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' }) : '—';
+        function countdown(str) {
+            if (!str) return null;
+            const diff = new Date(str) - new Date();
+            if (diff <= 0) return null;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            if (d > 0) return `${d} hari ${h} jam lagi`;
+            if (h > 0) return `${h} jam ${m} menit lagi`;
+            return `${m} menit lagi`;
+        }
+        function escHtml(s) {
+            if (!s) return '';
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        let allCapsules = [];
+
+        async function loadCapsules() {
+            const grid = document.getElementById('capsule-grid');
+            try {
+                const res = await fetch('/api/capsules');
+                allCapsules = await res.json();
+
+                if (!allCapsules.length) {
+                    grid.innerHTML = `<div style="text-align:center; padding: 5rem 1rem; color: var(--muted); grid-column: 1/-1;"><span style="font-size:3rem;display:block;margin-bottom:1rem">📭</span> Belum ada wadah Kapsul Waktu yang dibuat.</div>`;
+                    return;
+                }
+
+                grid.innerHTML = allCapsules.map(c => {
+                    if (c.is_open) {
+                        return `
+                        <div class="capsule-card opened" onclick="openWall(${c.id})">
+                            <div>
+                                <span class="capsule-badge badge-open">🔓 Tiba Waktunya!</span>
+                                <div class="capsule-title text-gold2">${escHtml(c.title)}</div>
+                                <div class="capsule-desc">${escHtml(c.message)}</div>
+                                <div class="capsule-stats"><i class="fa-solid fa-envelope-open-text"></i> ${c.entries?.length || 0} Memori terbuka</div>
+                            </div>
+                            <button class="btn btn-gold mt-auto"><i class="fa-solid fa-eye"></i> Baca Bersama</button>
+                        </div>`;
+                    } else {
+                        const cd = countdown(c.unlock_at);
+                        return `
+                        <div class="capsule-card locked">
+                            <div>
+                                <span class="capsule-badge badge-locked">🔒 Tersegel</span>
+                                <div class="capsule-title">${escHtml(c.title)}</div>
+                                <div class="capsule-desc">${escHtml(c.message)}</div>
+                                <div class="capsule-stats" style="margin-bottom:0.5rem"><i class="fa-solid fa-users"></i> ${c.entry_count} orang telah menitipkan pesan</div>
+                                <div style="font-size:0.8rem; color:var(--accent2); margin-bottom: 1.5rem; padding: 0.5rem; background: rgba(99,102,241,0.1); border-radius: 0.5rem; text-align: center;">
+                                    ${cd ? `⏱ Buka dalam ${cd}` : (c.unlock_at ? 'Waktu sudah lewat, tunggu Owner...' : '🔑 Buka manual oleh Owner')}
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-auto" onclick="openSubmitModal(${c.id}, '${escHtml(c.title).replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-plus-circle"></i> Titipkan Pesan
+                            </button>
+                        </div>`;
+                    }
+                }).join('');
+            } catch (e) {
+                grid.innerHTML = `<div style="text-align:center; color: #ef4444; grid-column: 1/-1;">Gagal memuat kapsul waktu.</div>`;
+            }
+        }
+
+        // Modal Logic
+        function openSubmitModal(id, title) {
+            document.getElementById('entry-capsule-id').value = id;
+            document.getElementById('form-capsule-title').textContent = title;
+            document.getElementById('submit-error').style.display = 'none';
+            document.getElementById('capsule-form').reset();
+            document.getElementById('submit-modal').classList.add('active');
+        }
+        function closeSubmitModal() { document.getElementById('submit-modal').classList.remove('active'); }
+
+        async function submitEntry(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const err = document.getElementById('submit-error');
+            err.style.display = 'none';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyegel...';
+
+            const id = document.getElementById('entry-capsule-id').value;
+            const fd = new FormData();
+            fd.append('author_name', document.getElementById('entry-name').value);
+            fd.append('message', document.getElementById('entry-msg').value);
+            const img = document.getElementById('entry-img').files[0];
+            if (img) fd.append('image', img);
+
+            try {
+                const res = await fetch(`/api/capsules/${id}/entries`, { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.success) {
+                    closeSubmitModal();
+                    alert("✅ Pesanmu berhasil disegel di dalam kapsul waktu!");
+                    loadCapsules();
+                } else {
+                    err.textContent = data.message;
+                    err.style.display = 'block';
+                }
+            } catch (error) {
+                err.textContent = "Gagal menghubungi server.";
+                err.style.display = 'block';
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Segel Pesanku';
+        }
+
+        // Wall Logic
+        function openWall(id) {
+            const c = allCapsules.find(x => x.id === id);
+            if (!c || !c.entries) return;
+            document.getElementById('wall-title').textContent = `✨ ${c.title}`;
+            
+            const wall = document.getElementById('wall-masonry');
+            if (!c.entries.length) {
+                wall.innerHTML = '<div style="color:var(--muted); text-align:center; padding: 4rem; font-size: 1.2rem; grid-column: 1/-1;">Sayang sekali, kapsul ini kosong saat dibuka.</div>';
+            } else {
+                wall.innerHTML = c.entries.map((e, i) => `
+                <div class="entry-card" style="animation-delay: ${i * 0.05}s">
+                    <div class="entry-author"><i class="fa-solid fa-user-circle"></i> ${escHtml(e.author_name)}</div>
+                    <div class="entry-date">${fmtDate(e.created_at)}</div>
+                    <div class="entry-msg">${escHtml(e.message)}</div>
+                    ${e.image_filename ? `<img src="/uploads/capsules/${e.image_filename}" class="entry-img" alt="Memory" loading="lazy" />` : ''}
+                </div>`).join('');
+            }
+            document.body.style.overflow = 'hidden';
+            document.getElementById('wall-overlay').classList.add('active');
+        }
+        function closeWall() {
+            document.getElementById('wall-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        loadCapsules();
+        setInterval(loadCapsules, 30000); // refresh every 30s
+    </script>
+</body>
+</html>

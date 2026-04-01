@@ -1,0 +1,26 @@
+# ─── Git Ignore ────────────────────────────────────────────────────────────────
+
+# Environment variables (JANGAN pernah di-commit!)
+.env
+.env.*
+!.env.example
+
+# Database files
+db/*.db
+db/*.sqlite
+db/*.sqlite3
+db/sessions/
+
+# Node modules
+node_modules/
+
+# Upload hasil siswa/guru
+public/uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+*.log

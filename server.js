@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const session = require('express-session');
+const helmet = require('helmet');
 const path = require('path');
 const { initDb, getDb } = require('./db/setup');
 
@@ -25,27 +27,48 @@ async function startServer() {
             db.prepare("INSERT OR IGNORE INTO users (username, password_hash, role, is_first_login) VALUES (?, ?, 'admin', 1)")
                 .run(name, tempHash);
         });
-        console.log('✅ Default accounts created');
+        console.log('✅ Akun default berhasil dibuat');
     }
 
     // ─── Express + HTTP Server ─────────────────────────────────────────────────
     const app = express();
     const server = http.createServer(app);
-    const io = new Server(server, { cors: { origin: '*' } });
+
+    // Batasi CORS Socket.io hanya ke origin yang diizinkan
+    const allowedOrigins = process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(',')
+        : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
+    const io = new Server(server, {
+        cors: {
+            origin: allowedOrigins,
+            methods: ['GET', 'POST'],
+        },
+    });
+
+    // ─── Security Headers (Helmet) ─────────────────────────────────────────────
+    app.use(helmet({
+        contentSecurityPolicy: false, // dimatikan agar inline script di HTML tetap jalan
+        crossOriginEmbedderPolicy: false,
+    }));
 
     // ─── Session ───────────────────────────────────────────────────────────────
     const FileStore = require('session-file-store')(session);
     app.use(session({
         store: new FileStore({ path: path.join(__dirname, 'db', 'sessions'), ttl: 86400, retries: 0 }),
-        secret: 'alfityan-secret-key-2026',
+        secret: process.env.SESSION_SECRET || 'fallback-secret-GANTI-DI-.env',
         resave: false,
         saveUninitialized: false,
-        cookie: { maxAge: 24 * 60 * 60 * 1000 },
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,   // tidak bisa diakses JS browser
+            sameSite: 'lax',  // proteksi CSRF dasar
+        },
     }));
 
     // ─── Body Parsers ──────────────────────────────────────────────────────────
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: '1mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
     // ─── Static Files ──────────────────────────────────────────────────────────
     app.use(express.static(path.join(__dirname, 'public')));
@@ -68,6 +91,7 @@ async function startServer() {
     app.get('/admin/grades', requireAuth, requireNotFirstLogin, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/grades.html')));
     app.get('/admin/forum', requireAuth, requireNotFirstLogin, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/forum.html')));
     app.get('/admin/gallery', requireAuth, requireNotFirstLogin, requireOwner, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/gallery.html')));
+    app.get('/admin/capsule', requireAuth, requireNotFirstLogin, requireOwner, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/capsule.html')));
     app.get('/admin/logs', requireAuth, requireNotFirstLogin, requireOwner, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/logs.html')));
     app.get('/admin/access', requireAuth, requireNotFirstLogin, requireOwner, (req, res) => res.sendFile(path.join(__dirname, 'views/admin/access.html')));
 
@@ -78,21 +102,25 @@ async function startServer() {
 
     io.on('connection', socket => {
         socket.on('join', ({ username }) => {
+            // Validasi username tidak kosong dan tidak terlalu panjang
+            if (!username || typeof username !== 'string' || username.trim().length === 0 || username.length > 50) return;
             const color = userColors[(colorIdx++) % userColors.length];
-            onlineUsers.set(socket.id, { username, color });
+            onlineUsers.set(socket.id, { username: username.trim(), color });
             socket.emit('color_assigned', { color });
             io.emit('online_count', { count: onlineUsers.size });
-            io.emit('chat_message', { type: 'system', text: `${username} masuk ke chat 👋`, time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
+            io.emit('chat_message', { type: 'system', text: `${username.trim()} masuk ke chat 👋`, time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
         });
 
         socket.on('send_message', ({ message }) => {
             const user = onlineUsers.get(socket.id);
-            if (!user || !message.trim()) return;
+            if (!user || !message || typeof message !== 'string' || !message.trim()) return;
+            // Batasi panjang pesan
+            const sanitizedMsg = message.trim().substring(0, 500);
             const db = getDb();
-            db.prepare('INSERT INTO chat_messages (username, message, color) VALUES (?, ?, ?)').run(user.username, message.trim(), user.color);
+            db.prepare('INSERT INTO chat_messages (username, message, color) VALUES (?, ?, ?)').run(user.username, sanitizedMsg, user.color);
             db.close();
             const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            io.emit('chat_message', { type: 'user', username: user.username, color: user.color, message: message.trim(), time });
+            io.emit('chat_message', { type: 'user', username: user.username, color: user.color, message: sanitizedMsg, time });
         });
 
         socket.on('disconnect', () => {
@@ -109,8 +137,8 @@ async function startServer() {
     const PORT = process.env.PORT || 3000;
     server.listen(PORT, () => {
         console.log(`\n🚀 SMPIT Al-Fityan berjalan di http://localhost:${PORT}`);
-        console.log(`   Owner login: raihan / REHANsukaRAISA12#$`);
         console.log(`   Tekan Ctrl+C untuk berhenti.\n`);
+        // ⚠️  Password owner TIDAK dicetak di sini — lihat file .env
     });
 }
 
