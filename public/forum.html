@@ -1,251 +1,454 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-
+<html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forum Belajar — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <style>
-        .card-hover {
-            transition: all .3s cubic-bezier(.4, 0, .2, 1)
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forum Belajar — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
+  <meta name="description" content="Forum diskusi kelas 8B Ahmad bin Hambal SMPIT Al-Fityan."/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/nb.css"/>
+  <style>
+    .page-hero {
+      background: var(--yellow);
+      border-bottom: var(--border);
+      padding: 48px 24px 40px;
+    }
+    .page-hero-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .page-hero h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--black); margin-bottom: 8px;
+    }
+    .page-hero p { font-size: 1rem; font-weight: 600; color: rgba(0,0,0,0.6); }
 
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .12)
-        }
-    </style>
+    /* Content */
+    .forum-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* Category Filters */
+    .cat-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .cat-btn {
+      padding: 8px 18px;
+      font-family: 'Archivo Black', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border: var(--border3); background: var(--white); color: var(--black);
+      box-shadow: 3px 3px 0px var(--black);
+      cursor: pointer; transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .cat-btn:hover  { transform: translate(2px,2px); box-shadow: 1px 1px 0px var(--black); }
+    .cat-btn.active { background: var(--black); color: var(--yellow); box-shadow: 3px 3px 0px var(--yellow); }
+
+    /* Posts list */
+    #postsList { display: flex; flex-direction: column; gap: 16px; }
+
+    .post-card {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: var(--white);
+      padding: 24px;
+      display: flex; align-items: flex-start; gap: 16px;
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .post-card:hover  { transform: translate(4px,4px); box-shadow: 3px 3px 0px var(--black); }
+    .post-card:active { transform: translate(8px,8px); box-shadow: none; }
+
+    .post-avatar {
+      width: 48px; height: 48px;
+      border: var(--border3); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif; font-size: 1.1rem;
+      color: var(--black);
+    }
+    .post-body { flex: 1; min-width: 0; }
+    .post-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .post-cat {
+      font-family: 'Archivo Black', sans-serif; font-size: 0.7rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 10px; border: 2px solid var(--black);
+      background: var(--yellow); color: var(--black);
+    }
+    .post-time { font-size: 0.78rem; font-weight: 700; color: #999; }
+    .post-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.15rem; color: var(--black); margin-bottom: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .post-excerpt { font-size: 0.9rem; font-weight: 500; color: #555; line-height: 1.5; margin-bottom: 10px; }
+    .post-stats {
+      display: flex; align-items: center; gap: 14px; font-size: 0.82rem; font-weight: 700; color: #888;
+    }
+    .post-arrow { flex-shrink: 0; font-size: 1rem; color: #ccc; align-self: center; }
+
+    /* Category badge colors */
+    .cat-Tips-Belajar   { background: var(--cyan); }
+    .cat-Sumber-Belajar { background: var(--mint); }
+    .cat-Tugas          { background: var(--red); color: white; border-color: var(--black); }
+    .cat-Matematika     { background: var(--purple); color: white; border-color: var(--black); }
+    .cat-IPA            { background: var(--mint); }
+    .cat-Umum           { background: #ddd; }
+
+    /* Thread detail */
+    #threadView { display: none; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Archivo Black', sans-serif; font-size: 0.88rem;
+      padding: 10px 18px; border: var(--border3);
+      box-shadow: 4px 4px 0px var(--black);
+      background: var(--white); color: var(--black);
+      cursor: pointer; transition: transform 0.08s, box-shadow 0.08s;
+      margin-bottom: 24px;
+    }
+    .back-btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0px var(--black); }
+
+    .thread-main {
+      border: var(--border); box-shadow: var(--shadow);
+      background: var(--white); padding: 28px; margin-bottom: 20px;
+    }
+    .thread-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.8rem; margin-bottom: 12px;
+    }
+    .thread-body { font-size: 1rem; font-weight: 500; color: #333; line-height: 1.7; margin-bottom: 20px; }
+    .thread-author-row { display: flex; align-items: center; gap: 10px; }
+    .thread-author-avatar {
+      width: 36px; height: 36px; border: var(--border3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif; font-size: 0.9rem;
+    }
+
+    #repliesSection { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+    .reply-card {
+      border: var(--border3); box-shadow: 4px 4px 0px var(--black);
+      background: var(--bg); padding: 18px; margin-left: 32px;
+    }
+    .reply-author-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .reply-avatar {
+      width: 30px; height: 30px; border: 2px solid var(--black);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif; font-size: 0.78rem;
+    }
+    .reply-author { font-family: 'Archivo Black', sans-serif; font-size: 0.9rem; }
+    .reply-time { font-size: 0.75rem; font-weight: 700; color: #999; }
+    .reply-text { font-size: 0.9rem; font-weight: 500; color: #333; line-height: 1.6; }
+
+    .reply-form {
+      border: var(--border); box-shadow: var(--shadow);
+      background: var(--white); padding: 24px;
+    }
+    .reply-form h4 {
+      font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; margin-bottom: 16px;
+    }
+
+    /* New Post Modal */
+    .forum-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.76);
+    }
+    .forum-modal-overlay.open { display: flex; }
+    .forum-modal-box {
+      background: var(--bg);
+      border: var(--border); box-shadow: 10px 10px 0px var(--black);
+      padding: 36px 32px; width: 100%; max-width: 520px; margin: 16px;
+      animation: nbModalIn 0.14s ease both;
+    }
+    @keyframes nbModalIn {
+      from{transform:scale(0.9) translate(8px,8px);opacity:0}
+      to{transform:scale(1) translate(0,0);opacity:1}
+    }
+    .forum-modal-box h3 {
+      font-family: 'Archivo Black', sans-serif; font-size: 1.5rem; margin-bottom: 20px;
+    }
+    .modal-actions { display: flex; gap: 12px; }
+    .nb-btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 22px; font-family: 'Archivo Black', sans-serif; font-size: 1rem;
+      border: var(--border); background: var(--white); color: var(--black);
+      box-shadow: var(--shadow); cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .nb-btn-ghost:hover  { transform: translate(4px,4px); box-shadow: 3px 3px 0px var(--black); }
+    .nb-btn-ghost:active { transform: translate(8px,8px); box-shadow: none; }
+
+    .empty-state {
+      text-align: center; padding: 60px 24px;
+      border: var(--border); box-shadow: var(--shadow); background: var(--white);
+    }
+    .empty-state .icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+    .empty-state p { font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: #666; }
+  </style>
 </head>
+<body>
 
-<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-500 to-orange-500 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-bold">AF
-                </div>
-                <span class="text-white font-bold">Al-Fityan 8B</span>
-            </a>
-            <div class="hidden md:flex items-center gap-5 text-white/90 text-sm font-medium">
-                <a href="/" class="hover:text-white transition-colors">Beranda</a>
-                <a href="/assignments.html" class="hover:text-white transition-colors">Tugas</a>
-                <a href="/grades.html" class="hover:text-white transition-colors">Nilai</a>
-                <a href="/chat.html" class="hover:text-white transition-colors">Chat</a>
-                <a href="/forum.html" class="text-white font-bold border-b-2 border-white pb-0.5">Forum</a>
-                <a href="/kapsul-waktu.html" class="hover:text-white transition-colors">Kapsul Waktu</a>
-            </div>
-            <button id="darkToggle"
-                class="w-9 h-9 rounded-xl bg-white/20 text-white flex items-center justify-center hover:scale-110 transition-transform">
-                <i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline"></i>
-            </button>
-        </div>
-    </nav>
+<!-- NAVBAR -->
+<nav class="nb-nav" id="mainNav">
+  <a href="/" class="nb-nav-brand">
+    <div class="nb-nav-logo">AF</div>
+    <div class="nb-nav-title">
+      <span>SMPIT Al-Fityan</span>
+      <span>Kelas 8B Ahmad bin Hambal</span>
+    </div>
+  </a>
+  <ul class="nb-nav-links">
+    <li><a href="/">Beranda</a></li>
+    <li><a href="/assignments.html">Tugas</a></li>
+    <li><a href="/grades.html">Nilai</a></li>
+    <li><a href="/chat.html">Chat</a></li>
+    <li><a href="/forum.html" class="active">Forum</a></li>
+    <li><a href="/kapsul-waktu.html">Kapsul Waktu</a></li>
+  </ul>
+  <button class="nb-mob-btn" id="mobileMenuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+</nav>
+<div class="nb-mob-menu" id="mobileMenu">
+  <a href="/">Beranda</a><a href="/assignments.html">Tugas</a>
+  <a href="/grades.html">Nilai</a><a href="/chat.html">Chat</a>
+  <a href="/forum.html" class="active">Forum</a><a href="/kapsul-waktu.html">Kapsul Waktu</a>
+</div>
 
-    <div class="pt-24 pb-16 px-4 max-w-5xl mx-auto">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
-            <div>
-                <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-1">🗣️ Forum Belajar</h1>
-                <p class="text-gray-500 dark:text-gray-400">Diskusi, tanya, dan berbagi ilmu bersama teman kelas!</p>
-            </div>
-            <button id="newPostBtn"
-                class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-2xl hover:scale-105 transition-transform shadow-lg">
-                <i class="fa-solid fa-plus mr-2"></i>Buat Thread Baru
-            </button>
-        </div>
+<!-- NEW POST MODAL -->
+<div class="forum-modal-overlay" id="newPostModal">
+  <div class="forum-modal-box">
+    <h3>🗣️ Buat Thread Baru</h3>
+    <div class="nb-form-group">
+      <label class="nb-form-label">Judul Diskusi</label>
+      <input id="postTitle" type="text" class="nb-input" placeholder="Tulis judul diskusi yang menarik..."/>
+    </div>
+    <div class="nb-form-group">
+      <label class="nb-form-label">Kategori</label>
+      <select id="postCategory" class="nb-select">
+        <option>Umum</option><option>Tips Belajar</option><option>Sumber Belajar</option>
+        <option>Tugas</option><option>Matematika</option><option>IPA</option>
+        <option>IPS</option><option>Bahasa Inggris</option>
+      </select>
+    </div>
+    <div class="nb-form-group">
+      <label class="nb-form-label">Isi Diskusi</label>
+      <textarea id="postBody" class="nb-textarea" rows="4" placeholder="Tuliskan pertanyaan atau diskusimu di sini..."></textarea>
+    </div>
+    <div class="nb-form-group">
+      <label class="nb-form-label">Nama Kamu</label>
+      <input id="postAuthor" type="text" class="nb-input" placeholder="Nama kamu"/>
+    </div>
+    <div class="modal-actions">
+      <button id="cancelPost" class="nb-btn-ghost" style="flex:1;justify-content:center;">Batal</button>
+      <button id="submitPost" class="nb-btn nb-btn-black" style="flex:2;justify-content:center;">
+        <i class="fa-solid fa-paper-plane"></i> Posting!
+      </button>
+    </div>
+  </div>
+</div>
 
-        <!-- New Post Modal -->
-        <div id="newPostModal"
-            class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div class="bg-white dark:bg-gray-900 rounded-3xl p-7 w-full max-w-lg mx-4 shadow-2xl">
-                <h3 class="text-xl font-bold mb-5 dark:text-white">Buat Thread Baru</h3>
-                <input id="postTitle" type="text" placeholder="Judul diskusi..."
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-3 focus:outline-none focus:ring-2 focus:ring-amber-400" />
-                <select id="postCategory"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-3 focus:outline-none">
-                    <option>Umum</option>
-                    <option>Tips Belajar</option>
-                    <option>Sumber Belajar</option>
-                    <option>Tugas</option>
-                    <option>Matematika</option>
-                    <option>IPA</option>
-                    <option>IPS</option>
-                    <option>Bahasa Inggris</option>
-                </select>
-                <textarea id="postBody" rows="4" placeholder="Tulis isi diskusimu di sini..."
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-3 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"></textarea>
-                <input id="postAuthor" type="text" placeholder="Nama kamu"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-4 focus:outline-none" />
-                <div class="flex gap-3">
-                    <button onclick="document.getElementById('newPostModal').classList.add('hidden')"
-                        class="flex-1 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Batal</button>
-                    <button id="submitPost"
-                        class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:opacity-90 transition-opacity">Posting</button>
-                </div>
-            </div>
-        </div>
+<div class="nb-page">
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div>
+        <div class="nb-tag">🗣️ Forum Belajar</div>
+        <h1>Forum<br/>Belajar Kelas 8B</h1>
+        <p>Diskusi, tanya, dan berbagi ilmu bersama teman kelas!</p>
+      </div>
+      <button id="newPostBtn" class="nb-btn nb-btn-black">
+        <i class="fa-solid fa-plus"></i> Buat Thread Baru
+      </button>
+    </div>
+  </div>
 
-        <!-- Thread list view -->
-        <div id="listView">
-            <!-- Category filter -->
-            <div class="flex flex-wrap gap-2 mb-6" id="categoryFilters">
-                <button class="cat-btn active px-3 py-1.5 rounded-xl text-sm font-semibold bg-amber-500 text-white"
-                    data-cat="all">Semua</button>
-            </div>
-            <div id="postsList" class="space-y-4">
-                <div class="text-center py-12 text-gray-400"><i
-                        class="fa-solid fa-spinner fa-spin text-2xl block mb-3"></i>Memuat...</div>
-            </div>
-        </div>
-
-        <!-- Thread detail view -->
-        <div id="threadView" class="hidden">
-            <button onclick="backToList()"
-                class="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke daftar
-            </button>
-            <div id="threadContent"></div>
-            <div id="repliesSection" class="mt-6 space-y-4"></div>
-            <!-- Reply form -->
-            <div class="mt-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
-                <h4 class="font-bold mb-3 dark:text-white">Tulis Balasan</h4>
-                <input id="replyAuthor" type="text" placeholder="Nama kamu"
-                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-2 focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm" />
-                <textarea id="replyBody" rows="3" placeholder="Tuliskan balasanmu..."
-                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-white mb-3 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none text-sm"></textarea>
-                <button id="submitReply"
-                    class="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:opacity-90 transition-opacity text-sm">
-                    <i class="fa-solid fa-reply mr-2"></i>Balas
-                </button>
-            </div>
-        </div>
+  <div class="forum-content">
+    <!-- LIST VIEW -->
+    <div id="listView">
+      <div class="cat-filters" id="categoryFilters">
+        <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)">Semua</button>
+      </div>
+      <div id="postsList">
+        <div class="empty-state"><span class="icon"><i class="fa-solid fa-spinner fa-spin"></i></span><p>Memuat...</p></div>
+      </div>
     </div>
 
-    <script>
-        const root = document.documentElement;
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme:dark)').matches)) root.classList.add('dark');
-        document.getElementById('darkToggle').addEventListener('click', () => { root.classList.toggle('dark'); localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light') });
-
-        let allPosts = [];
-        let currentPostId = null;
-        let activeCategory = 'all';
-
-        const catColors = { 'Tips Belajar': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300', 'Sumber Belajar': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', 'Tugas': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', 'Matematika': 'bg-purple-100 text-purple-700', 'IPA': 'bg-teal-100 text-teal-700', 'Umum': 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' };
-        const avatarColors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444'];
-        function getColor(name) { let h = 0; for (let c of name) h = (h * 31 + c.charCodeAt(0)) % avatarColors.length; return avatarColors[h]; }
-        function timeAgo(ts) { const d = new Date(ts.replace(' ', 'T')); const s = Math.floor((Date.now() - d) / 1000); if (s < 60) return 'baru saja'; if (s < 3600) return `${Math.floor(s / 60)}m lalu`; if (s < 86400) return `${Math.floor(s / 3600)}j lalu`; return `${Math.floor(s / 86400)}h lalu`; }
-
-        async function loadPosts() {
-            const r = await fetch('/api/forum');
-            allPosts = await r.json();
-            const cats = [...new Set(allPosts.map(p => p.category))];
-            const filters = document.getElementById('categoryFilters');
-            filters.innerHTML = '<button class="cat-btn active px-3 py-1.5 rounded-xl text-sm font-semibold bg-amber-500 text-white" data-cat="all" onclick="filterCat(\'all\',this)">Semua</button>';
-            cats.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'cat-btn px-3 py-1.5 rounded-xl text-sm font-semibold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300';
-                btn.dataset.cat = c; btn.textContent = c;
-                btn.onclick = () => filterCat(c, btn);
-                filters.appendChild(btn);
-            });
-            renderPosts();
-        }
-
-        function filterCat(cat, btn) {
-            activeCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(b => {
-                b.className = b === btn ? 'cat-btn px-3 py-1.5 rounded-xl text-sm font-semibold bg-amber-500 text-white' : 'cat-btn px-3 py-1.5 rounded-xl text-sm font-semibold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300';
-            });
-            renderPosts();
-        }
-
-        function renderPosts() {
-            const data = activeCategory === 'all' ? allPosts : allPosts.filter(p => p.category === activeCategory);
-            if (!data.length) { document.getElementById('postsList').innerHTML = '<div class="text-center py-12 text-gray-400">Belum ada thread.</div>'; return; }
-            document.getElementById('postsList').innerHTML = data.map(p => `
-      <div onclick="openThread(${p.id})" class="card-hover cursor-pointer bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm">
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${getColor(p.author)}">${p.author[0].toUpperCase()}</div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 flex-wrap mb-1">
-              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${catColors[p.category] || 'bg-gray-100 text-gray-700'}">${p.category}</span>
-              <span class="text-gray-400 text-xs">${timeAgo(p.created_at)}</span>
-            </div>
-            <h3 class="text-base font-bold dark:text-white mb-1 line-clamp-1">${p.title}</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2">${p.body}</p>
-            <div class="flex items-center gap-3 mt-2 text-gray-400 text-xs">
-              <span><i class="fa-regular fa-user mr-1"></i>${p.author}</span>
-              <span><i class="fa-regular fa-comment mr-1"></i>${p.reply_count || 0} balasan</span>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right text-gray-300 flex-shrink-0 mt-1"></i>
+    <!-- THREAD VIEW -->
+    <div id="threadView">
+      <button class="back-btn" onclick="backToList()">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+      </button>
+      <div id="threadContent"></div>
+      <div id="repliesSection"></div>
+      <div class="reply-form">
+        <h4>💬 Tulis Balasan</h4>
+        <div class="nb-form-group">
+          <label class="nb-form-label">Nama Kamu</label>
+          <input id="replyAuthor" type="text" class="nb-input" placeholder="Nama kamu..."/>
         </div>
+        <div class="nb-form-group">
+          <label class="nb-form-label">Balasanmu</label>
+          <textarea id="replyBody" class="nb-textarea" rows="3" placeholder="Tuliskan balasanmu yang bermanfaat..."></textarea>
+        </div>
+        <button id="submitReply" class="nb-btn nb-btn-orange">
+          <i class="fa-solid fa-reply"></i> Kirim Balasan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="nb-footer">
+    <div class="nb-footer-inner">
+      <div class="nb-footer-box"><p>Crafted with ♥ by Raihan for SMPIT Al-Fityan 8B</p></div>
+      <div class="nb-footer-links">
+        <a href="/">Beranda</a><a href="/assignments.html">Tugas</a>
+        <a href="/grades.html">Nilai</a><a href="/chat.html">Chat</a>
+        <a href="/forum.html">Forum</a><a href="/kapsul-waktu.html">Kapsul Waktu</a>
+      </div>
+      <p class="nb-footer-copy">SMPIT Al-Fityan — Kelas 8B Ahmad bin Hambal — 2025/2026</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+
+  let allPosts = [], currentPostId = null, activeCategory = 'all';
+
+  const catBgClass = c => ({
+    'Tips Belajar':'cat-Tips-Belajar','Sumber Belajar':'cat-Sumber-Belajar',
+    'Tugas':'cat-Tugas','Matematika':'cat-Matematika','IPA':'cat-IPA','Umum':'cat-Umum'
+  }[c] || '');
+
+  const avatarColors = ['#FFE033','#00E5A0','#FF3EA5','#00C8FF','#FF6B2B','#9B5CF7'];
+  function getColor(name) {
+    let h = 0;
+    for (let c of name) h = (h * 31 + c.charCodeAt(0)) % avatarColors.length;
+    return avatarColors[h];
+  }
+  function timeAgo(ts) {
+    const d = new Date(ts.replace(' ','T'));
+    const s = Math.floor((Date.now() - d) / 1000);
+    if (s < 60) return 'baru saja';
+    if (s < 3600) return `${Math.floor(s/60)}m lalu`;
+    if (s < 86400) return `${Math.floor(s/3600)}j lalu`;
+    return `${Math.floor(s/86400)}h lalu`;
+  }
+
+  async function loadPosts() {
+    const r = await fetch('/api/forum');
+    allPosts = await r.json();
+    const cats = [...new Set(allPosts.map(p => p.category))];
+    const filters = document.getElementById('categoryFilters');
+    filters.innerHTML = '<button class="cat-btn active" data-cat="all" onclick="filterCat(\'all\',this)">Semua</button>';
+    cats.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-btn';
+      btn.dataset.cat = c; btn.textContent = c;
+      btn.onclick = () => filterCat(c, btn);
+      filters.appendChild(btn);
+    });
+    renderPosts();
+  }
+
+  function filterCat(cat, el) {
+    activeCategory = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+    renderPosts();
+  }
+
+  function renderPosts() {
+    const data = activeCategory === 'all' ? allPosts : allPosts.filter(p => p.category === activeCategory);
+    if (!data.length) {
+      document.getElementById('postsList').innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>Belum ada thread.</p></div>`;
+      return;
+    }
+    document.getElementById('postsList').innerHTML = data.map(p => `
+      <div onclick="openThread(${p.id})" class="post-card">
+        <div class="post-avatar" style="background:${getColor(p.author)};">${p.author[0].toUpperCase()}</div>
+        <div class="post-body">
+          <div class="post-meta">
+            <span class="post-cat ${catBgClass(p.category)}">${p.category}</span>
+            <span class="post-time">${timeAgo(p.created_at)}</span>
+          </div>
+          <div class="post-title">${p.title}</div>
+          <div class="post-excerpt">${p.body.substring(0,150)}${p.body.length>150?'...':''}</div>
+          <div class="post-stats">
+            <span><i class="fa-regular fa-user"></i> ${p.author}</span>
+            <span><i class="fa-regular fa-comment"></i> ${p.reply_count||0} balasan</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right post-arrow"></i>
       </div>
     `).join('');
-        }
+  }
 
-        async function openThread(id) {
-            currentPostId = id;
-            document.getElementById('listView').classList.add('hidden');
-            document.getElementById('threadView').classList.remove('hidden');
-            const r = await fetch(`/api/forum/${id}`);
-            const { post, replies } = await r.json();
-            document.getElementById('threadContent').innerHTML = `
-      <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-        <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${catColors[post.category] || 'bg-gray-100 text-gray-700'} mb-3 inline-block">${post.category}</span>
-        <h2 class="text-2xl font-black dark:text-white mb-3">${post.title}</h2>
-        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">${post.body}</p>
-        <div class="flex items-center gap-2 text-gray-400 text-sm">
-          <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background:${getColor(post.author)}">${post.author[0]}</div>
-          <span class="text-gray-600 dark:text-gray-300 font-medium">${post.author}</span>
-          <span>·</span><span>${timeAgo(post.created_at)}</span>
+  async function openThread(id) {
+    currentPostId = id;
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('threadView').style.display = 'block';
+    const r = await fetch(`/api/forum/${id}`);
+    const { post, replies } = await r.json();
+    document.getElementById('threadContent').innerHTML = `
+      <div class="thread-main">
+        <span class="post-cat ${catBgClass(post.category)}" style="margin-bottom:14px;display:inline-block;">${post.category}</span>
+        <div class="thread-title">${post.title}</div>
+        <div class="thread-body">${post.body}</div>
+        <div class="thread-author-row">
+          <div class="thread-author-avatar" style="background:${getColor(post.author)};">${post.author[0].toUpperCase()}</div>
+          <span style="font-weight:700;">${post.author}</span>
+          <span style="color:#999;font-size:0.82rem;font-weight:600;">· ${timeAgo(post.created_at)}</span>
         </div>
-      </div>`;
-            document.getElementById('repliesSection').innerHTML = replies.length ? replies.map(r => `
-      <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 ml-6">
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background:${getColor(r.author)}">${r.author[0]}</div>
-          <span class="font-semibold dark:text-white text-sm">${r.author}</span>
-          <span class="text-gray-400 text-xs">${timeAgo(r.created_at)}</span>
+      </div>
+    `;
+    document.getElementById('repliesSection').innerHTML = replies.length
+      ? replies.map(re => `
+        <div class="reply-card">
+          <div class="reply-author-row">
+            <div class="reply-avatar" style="background:${getColor(re.author)};">${re.author[0].toUpperCase()}</div>
+            <span class="reply-author">${re.author}</span>
+            <span class="reply-time">· ${timeAgo(re.created_at)}</span>
+          </div>
+          <div class="reply-text">${re.body}</div>
         </div>
-        <p class="text-gray-700 dark:text-gray-300 text-sm">${r.body}</p>
-      </div>`).join('') : '<div class="text-gray-400 text-sm ml-6">Belum ada balasan. Jadilah yang pertama!</div>';
-            window.scrollTo(0, 0);
-        }
+      `).join('')
+      : '<p style="color:#aaa;font-weight:700;padding:12px 32px;">Belum ada balasan. Jadilah yang pertama!</p>';
+    window.scrollTo(0, 0);
+  }
 
-        function backToList() {
-            document.getElementById('threadView').classList.add('hidden');
-            document.getElementById('listView').classList.remove('hidden');
-            currentPostId = null;
-        }
+  function backToList() {
+    document.getElementById('threadView').style.display = 'none';
+    document.getElementById('listView').style.display = 'block';
+    currentPostId = null;
+  }
 
-        document.getElementById('newPostBtn').addEventListener('click', () => document.getElementById('newPostModal').classList.remove('hidden'));
-        document.getElementById('submitPost').addEventListener('click', async () => {
-            const title = document.getElementById('postTitle').value.trim();
-            const body = document.getElementById('postBody').value.trim();
-            const author = document.getElementById('postAuthor').value.trim();
-            const category = document.getElementById('postCategory').value;
-            if (!title || !body || !author) return alert('Lengkapi semua field!');
-            const r = await fetch('/api/forum', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, body, author, category }) });
-            const d = await r.json();
-            if (d.success) { document.getElementById('newPostModal').classList.add('hidden'); loadPosts(); }
-        });
+  document.getElementById('newPostBtn').addEventListener('click', () => document.getElementById('newPostModal').classList.add('open'));
+  document.getElementById('cancelPost').addEventListener('click', () => document.getElementById('newPostModal').classList.remove('open'));
 
-        document.getElementById('submitReply').addEventListener('click', async () => {
-            const body = document.getElementById('replyBody').value.trim();
-            const author = document.getElementById('replyAuthor').value.trim();
-            if (!body || !author) return alert('Lengkapi nama dan balasan!');
-            await fetch(`/api/forum/${currentPostId}/reply`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ body, author }) });
-            document.getElementById('replyBody').value = '';
-            openThread(currentPostId);
-        });
+  document.getElementById('submitPost').addEventListener('click', async () => {
+    const title = document.getElementById('postTitle').value.trim();
+    const body = document.getElementById('postBody').value.trim();
+    const author = document.getElementById('postAuthor').value.trim();
+    const category = document.getElementById('postCategory').value;
+    if (!title || !body || !author) return alert('Lengkapi semua field!');
+    const r = await fetch('/api/forum', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({title,body,author,category}) });
+    const d = await r.json();
+    if (d.success) { document.getElementById('newPostModal').classList.remove('open'); loadPosts(); }
+  });
 
-        loadPosts();
-    </script>
+  document.getElementById('submitReply').addEventListener('click', async () => {
+    const body = document.getElementById('replyBody').value.trim();
+    const author = document.getElementById('replyAuthor').value.trim();
+    if (!body || !author) return alert('Lengkapi nama dan balasan!');
+    await fetch(`/api/forum/${currentPostId}/reply`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({body,author}) });
+    document.getElementById('replyBody').value = '';
+    openThread(currentPostId);
+  });
+
+  loadPosts();
+</script>
 </body>
-
 </html>

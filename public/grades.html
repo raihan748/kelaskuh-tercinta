@@ -1,176 +1,361 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-
+<html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nilai — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <style>
-        .card-hover {
-            transition: all .3s cubic-bezier(.4, 0, .2, 1)
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nilai & Poin — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
+  <meta name="description" content="Nilai dan poin siswa kelas 8B Ahmad bin Hambal SMPIT Al-Fityan."/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/nb.css"/>
+  <style>
+    .page-hero {
+      background: var(--orange);
+      border-bottom: var(--border);
+      padding: 48px 24px 40px;
+    }
+    .page-hero h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .page-hero p { font-size: 1.05rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+    .page-hero .nb-tag { background: var(--white); border-color: var(--white); color: var(--black); }
 
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .12)
-        }
+    /* Search */
+    .search-section {
+      max-width: 800px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+    .search-row {
+      display: flex;
+      gap: 0;
+    }
+    .search-row .nb-input {
+      flex: 1;
+      border-right: none;
+      font-size: 1.05rem;
+    }
+    .search-row .nb-btn {
+      flex-shrink: 0;
+      border-left: none;
+      box-shadow: none;
+    }
 
-        .score-ring {
-            background: conic-gradient(var(--color) calc(var(--pct)*3.6deg), #e5e7eb calc(var(--pct)*3.6deg))
-        }
+    /* Student Grid */
+    .content-section {
+      max-width: 1000px;
+      margin: 32px auto;
+      padding: 0 24px 80px;
+    }
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .student-card {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: var(--white);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .student-card:hover  { transform: translate(4px,4px); box-shadow: 3px 3px 0px var(--black); }
+    .student-card:active { transform: translate(8px,8px); box-shadow: none; }
+    .student-avatar {
+      width: 48px; height: 48px;
+      border: 3px solid var(--black);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      flex-shrink: 0;
+      color: var(--black);
+    }
+    .student-name { font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: var(--black); }
+    .student-nis  { font-size: 0.8rem; font-weight: 600; color: #666; }
+    .student-pts  { margin-left: auto; text-align: right; flex-shrink: 0; }
+    .student-pts-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.5rem;
+      color: var(--black);
+    }
+    .student-pts-lbl { font-size: 0.72rem; font-weight: 700; color: #888; text-transform: uppercase; }
 
-        .dark .score-ring {
-            background: conic-gradient(var(--color) calc(var(--pct)*3.6deg), #374151 calc(var(--pct)*3.6deg))
-        }
-    </style>
+    /* Grade Panel */
+    #gradePanel { display: none; }
+    .grade-back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Archivo Black', sans-serif; font-size: 0.88rem;
+      padding: 10px 18px;
+      border: var(--border3); box-shadow: 4px 4px 0px var(--black);
+      background: var(--white); color: var(--black);
+      cursor: pointer; transition: transform 0.08s, box-shadow 0.08s;
+      margin-bottom: 24px;
+    }
+    .grade-back-btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0px var(--black); }
+
+    .points-banner {
+      background: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+      display: flex; align-items: center; gap: 24px;
+      margin-bottom: 28px;
+    }
+    .points-banner-icon { font-size: 3.5rem; flex-shrink: 0; }
+    .points-banner-total {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--black);
+    }
+    .points-banner-label { font-size: 0.9rem; font-weight: 700; color: #444; margin-top: 4px; }
+
+    .grades-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .grade-card {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: var(--white);
+      overflow: hidden;
+    }
+    .grade-card-top {
+      padding: 6px 14px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 3px solid var(--black);
+    }
+    .grade-card-body { padding: 18px; }
+    .grade-title { font-family: 'Archivo Black', sans-serif; font-size: 1rem; margin-bottom: 14px; }
+    .grade-score-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .grade-score-box {
+      width: 58px; height: 58px;
+      border: var(--border3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .grade-label { font-weight: 700; font-size: 0.88rem; }
+    .grade-pts { font-family: 'Archivo Black', sans-serif; font-size: 1rem; }
+
+    /* Score colors */
+    .score-A { background: var(--mint); color: var(--black); border-color: var(--black); }
+    .score-B { background: var(--cyan); color: var(--black); border-color: var(--black); }
+    .score-C { background: var(--yellow); color: var(--black); }
+    .score-D { background: var(--orange); color: var(--white); }
+    .score-E { background: var(--red); color: var(--white); }
+
+    /* Subject colors reused */
+    .subj-Matematika    { background: var(--cyan); }
+    .subj-IPA           { background: var(--mint); }
+    .subj-IPS           { background: var(--orange); color: white; }
+    .subj-Bahasa-Indonesia { background: var(--red); color: white; }
+    .subj-Bahasa-Inggris{ background: var(--purple); color: white; }
+    .subj-TIK           { background: var(--yellow); }
+    .subj-default       { background: var(--black); color: var(--yellow); }
+
+    .empty-state {
+      text-align: center; padding: 60px 24px;
+      border: var(--border); box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .empty-state p { font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: #666; }
+  </style>
 </head>
+<body>
 
-<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-green-500 to-emerald-600 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-bold">AF
-                </div>
-                <span class="text-white font-bold">Al-Fityan 8B</span>
-            </a>
-            <div class="hidden md:flex items-center gap-5 text-white/90 text-sm font-medium">
-                <a href="/" class="hover:text-white transition-colors">Beranda</a>
-                <a href="/assignments.html" class="hover:text-white transition-colors">Tugas</a>
-                <a href="/grades.html" class="text-white font-bold border-b-2 border-white pb-0.5">Nilai</a>
-                <a href="/chat.html" class="hover:text-white transition-colors">Chat</a>
-                <a href="/forum.html" class="hover:text-white transition-colors">Forum</a>
-                <a href="/kapsul-waktu.html" class="hover:text-white transition-colors">Kapsul Waktu</a>
-            </div>
-            <button id="darkToggle"
-                class="w-9 h-9 rounded-xl bg-white/20 text-white flex items-center justify-center hover:scale-110 transition-transform">
-                <i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline"></i>
-            </button>
-        </div>
-    </nav>
+<!-- NAVBAR -->
+<nav class="nb-nav" id="mainNav">
+  <a href="/" class="nb-nav-brand">
+    <div class="nb-nav-logo">AF</div>
+    <div class="nb-nav-title">
+      <span>SMPIT Al-Fityan</span>
+      <span>Kelas 8B Ahmad bin Hambal</span>
+    </div>
+  </a>
+  <ul class="nb-nav-links">
+    <li><a href="/">Beranda</a></li>
+    <li><a href="/assignments.html">Tugas</a></li>
+    <li><a href="/grades.html" class="active">Nilai</a></li>
+    <li><a href="/chat.html">Chat</a></li>
+    <li><a href="/forum.html">Forum</a></li>
+    <li><a href="/kapsul-waktu.html">Kapsul Waktu</a></li>
+  </ul>
+  <button class="nb-mob-btn" id="mobileMenuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+</nav>
+<div class="nb-mob-menu" id="mobileMenu">
+  <a href="/">Beranda</a><a href="/assignments.html">Tugas</a>
+  <a href="/grades.html" class="active">Nilai</a><a href="/chat.html">Chat</a>
+  <a href="/forum.html">Forum</a><a href="/kapsul-waktu.html">Kapsul Waktu</a>
+</div>
 
-    <div class="pt-24 pb-16 px-4 max-w-7xl mx-auto">
-        <div class="mb-8">
-            <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">📊 Nilai & Poin</h1>
-            <p class="text-gray-500 dark:text-gray-400">Cari namamu untuk melihat nilai dan poin yang sudah kamu
-                kumpulkan!</p>
-        </div>
+<div class="nb-page">
+  <!-- HERO -->
+  <div class="page-hero">
+    <div style="max-width:1000px;margin:0 auto;">
+      <div class="nb-tag">📊 Nilai & Poin</div>
+      <h1>Nilai &amp; Poin<br/>Kelas 8B</h1>
+      <p>Cari namamu untuk melihat nilai dan poin yang sudah kamu kumpulkan!</p>
+    </div>
+  </div>
 
-        <!-- Search -->
-        <div class="relative mb-8 max-w-lg">
-            <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input id="searchInput" type="text" placeholder="Cari nama atau NIS siswa..."
-                class="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-400 text-sm shadow-sm" />
-            <button id="searchBtn"
-                class="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:bg-green-600 transition-colors">Cari</button>
-        </div>
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-row">
+      <input id="searchInput" type="text" class="nb-input" placeholder="🔍  Cari nama atau NIS siswa..."/>
+      <button id="searchBtn" class="nb-btn nb-btn-black" style="box-shadow:var(--shadow);">
+        <i class="fa-solid fa-search"></i> Cari
+      </button>
+    </div>
+  </div>
 
-        <!-- Student list -->
-        <div id="studentList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            <div class="col-span-full text-center py-12 text-gray-400 text-sm">Ketik nama atau NIS untuk mencari siswa.
-            </div>
-        </div>
-
-        <!-- Grade detail panel -->
-        <div id="gradePanel" class="hidden">
-            <div class="flex items-center gap-3 mb-6">
-                <button
-                    onclick="document.getElementById('gradePanel').classList.add('hidden');document.getElementById('studentList').classList.remove('hidden');"
-                    class="p-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                    <i class="fa-solid fa-arrow-left text-gray-600 dark:text-gray-300"></i>
-                </button>
-                <h2 id="selectedStudentName" class="text-2xl font-bold dark:text-white"></h2>
-            </div>
-
-            <!-- Points card -->
-            <div id="pointsCard"
-                class="p-6 rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 text-white mb-6 shadow-xl flex items-center gap-6">
-                <div class="text-6xl">🏆</div>
-                <div>
-                    <div class="text-white/80 text-sm">Total Poin</div>
-                    <div id="totalPoints" class="text-5xl font-black">0</div>
-                    <div class="text-white/80 text-sm mt-1">Kumpulkan lebih banyak poin dengan nilai bagus!</div>
-                </div>
-            </div>
-
-            <div id="gradesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
+  <!-- CONTENT -->
+  <div class="content-section">
+    <!-- Student List -->
+    <div id="studentList">
+      <div class="empty-state">
+        <span class="icon">🔍</span>
+        <p>Ketik nama atau NIS untuk mencari siswa.</p>
+      </div>
     </div>
 
-    <script>
-        const root = document.documentElement;
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme:dark)').matches)) root.classList.add('dark');
-        document.getElementById('darkToggle').addEventListener('click', () => { root.classList.toggle('dark'); localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light') });
+    <!-- Grade Detail Panel -->
+    <div id="gradePanel">
+      <button class="grade-back-btn" id="backBtn">
+        <i class="fa-solid fa-arrow-left"></i> Kembali
+      </button>
 
-        const subjectColors = { 'Matematika': '#3b82f6', 'Bahasa Indonesia': '#ef4444', 'IPA': '#10b981', 'IPS': '#f59e0b', 'Bahasa Inggris': '#8b5cf6', 'TIK': '#06b6d4' };
-
-        function scoreColor(s) { return s >= 90 ? '#10b981' : s >= 80 ? '#3b82f6' : s >= 70 ? '#f59e0b' : s >= 60 ? '#f97316' : '#ef4444'; }
-        function scoreLabel(s) { return s >= 90 ? 'Sangat Baik' : s >= 80 ? 'Baik' : s >= 70 ? 'Cukup' : s >= 60 ? 'Perlu Belajar' : 'Kurang'; }
-
-        async function searchStudents() {
-            const q = document.getElementById('searchInput').value.trim();
-            if (!q) { document.getElementById('studentList').innerHTML = '<div class="col-span-full text-center py-12 text-gray-400 text-sm">Ketik nama atau NIS untuk mencari siswa.</div>'; return; }
-            const r = await fetch(`/api/students?q=${encodeURIComponent(q)}`);
-            const students = await r.json();
-            if (!students.length) {
-                document.getElementById('studentList').innerHTML = '<div class="col-span-full text-center py-12 text-gray-400 text-sm">Tidak ada siswa ditemukan.</div>';
-                return;
-            }
-            document.getElementById('studentList').innerHTML = students.map(s => `
-      <div onclick="showGrades(${s.id},'${s.name}',${s.points},'${s.avatar_color}')"
-           class="card-hover cursor-pointer p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${s.avatar_color}">${s.name.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
-        <div class="flex-1 min-w-0">
-          <div class="font-bold dark:text-white truncate">${s.name}</div>
-          <div class="text-gray-500 text-sm">NIS: ${s.nis} · ${s.class}</div>
-        </div>
-        <div class="text-right">
-          <div class="text-xl font-black text-purple-600 dark:text-purple-400">${s.points}</div>
-          <div class="text-gray-400 text-xs">poin</div>
-        </div>
-        <i class="fa-solid fa-chevron-right text-gray-300"></i>
-      </div>
-    `).join('');
-        }
-
-        async function showGrades(id, name, points, color) {
-            document.getElementById('studentList').classList.add('hidden');
-            document.getElementById('gradePanel').classList.remove('hidden');
-            document.getElementById('selectedStudentName').innerHTML = `<span style="color:${color}">${name}</span>`;
-            document.getElementById('totalPoints').textContent = points.toLocaleString();
-
-            const r = await fetch(`/api/grades/${id}`);
-            const grades = await r.json();
-            if (!grades.length) {
-                document.getElementById('gradesGrid').innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">Belum ada nilai yang diinput.</div>';
-                return;
-            }
-            document.getElementById('gradesGrid').innerHTML = grades.map(g => `
-      <div class="card-hover bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <span class="px-2 py-0.5 rounded-full text-xs font-semibold text-white" style="background:${subjectColors[g.subject] || '#6366f1'}">${g.subject}</span>
-            <h4 class="font-bold dark:text-white mt-1 text-sm">${g.assignment_title}</h4>
-          </div>
-          <div class="text-center">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg" style="background:${scoreColor(g.score)}">${g.score}</div>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold px-2 py-1 rounded-full" style="background:${scoreColor(g.score)}20;color:${scoreColor(g.score)}">${scoreLabel(g.score)}</span>
-          <span class="text-purple-600 dark:text-purple-400 font-bold text-sm">+${g.points_awarded} poin ⭐</span>
+      <div class="points-banner">
+        <div class="points-banner-icon">🏆</div>
+        <div>
+          <div id="totalPoints" class="points-banner-total">0</div>
+          <div class="points-banner-label">Total Poin — <span id="selectedStudentName"></span></div>
         </div>
       </div>
-    `).join('');
-        }
 
-        document.getElementById('searchBtn').addEventListener('click', searchStudents);
-        document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchStudents(); });
-    </script>
+      <div class="grades-grid" id="gradesGrid"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="nb-footer">
+    <div class="nb-footer-inner">
+      <div class="nb-footer-box"><p>Crafted with ♥ by Raihan for SMPIT Al-Fityan 8B</p></div>
+      <div class="nb-footer-links">
+        <a href="/">Beranda</a><a href="/assignments.html">Tugas</a>
+        <a href="/grades.html">Nilai</a><a href="/chat.html">Chat</a>
+        <a href="/forum.html">Forum</a><a href="/kapsul-waktu.html">Kapsul Waktu</a>
+      </div>
+      <p class="nb-footer-copy">SMPIT Al-Fityan — Kelas 8B Ahmad bin Hambal — 2025/2026</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+
+  const subjClass = s => ({
+    'Matematika':'subj-Matematika','IPA':'subj-IPA','IPS':'subj-IPS',
+    'Bahasa Indonesia':'subj-Bahasa-Indonesia','Bahasa Inggris':'subj-Bahasa-Inggris','TIK':'subj-TIK'
+  }[s] || 'subj-default');
+
+  function scoreClass(s) {
+    if (s >= 90) return 'score-A';
+    if (s >= 80) return 'score-B';
+    if (s >= 70) return 'score-C';
+    if (s >= 60) return 'score-D';
+    return 'score-E';
+  }
+  function scoreLabel(s) {
+    if (s >= 90) return '⭐ Sangat Baik';
+    if (s >= 80) return '✅ Baik';
+    if (s >= 70) return '📖 Cukup';
+    if (s >= 60) return '⚠️ Perlu Belajar';
+    return '❌ Kurang';
+  }
+
+  async function searchStudents() {
+    const q = document.getElementById('searchInput').value.trim();
+    const list = document.getElementById('studentList');
+    if (!q) {
+      list.innerHTML = `<div class="empty-state"><span class="icon">🔍</span><p>Ketik nama atau NIS untuk mencari siswa.</p></div>`;
+      return;
+    }
+    const r = await fetch(`/api/students?q=${encodeURIComponent(q)}`);
+    const students = await r.json();
+    if (!students.length) {
+      list.innerHTML = `<div class="empty-state"><span class="icon">😕</span><p>Tidak ada siswa ditemukan.</p></div>`;
+      return;
+    }
+    list.innerHTML = `<div class="student-grid">${students.map(s => `
+      <div class="student-card" onclick="showGrades(${s.id},'${s.name.replace(/'/g,"\\'")}',${s.points},'${s.avatar_color}')">
+        <div class="student-avatar" style="background:${s.avatar_color};">${s.name.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>
+        <div>
+          <div class="student-name">${s.name}</div>
+          <div class="student-nis">NIS: ${s.nis} · ${s.class}</div>
+        </div>
+        <div class="student-pts">
+          <div class="student-pts-num">${s.points}</div>
+          <div class="student-pts-lbl">Poin</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:#ccc;flex-shrink:0;"></i>
+      </div>
+    `).join('')}</div>`;
+  }
+
+  async function showGrades(id, name, points, color) {
+    document.getElementById('studentList').style.display = 'none';
+    document.getElementById('gradePanel').style.display = 'block';
+    document.getElementById('selectedStudentName').textContent = name;
+    document.getElementById('totalPoints').textContent = points.toLocaleString();
+
+    const r = await fetch(`/api/grades/${id}`);
+    const grades = await r.json();
+    if (!grades.length) {
+      document.getElementById('gradesGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span class="icon">📋</span><p>Belum ada nilai yang diinput.</p></div>`;
+      return;
+    }
+    document.getElementById('gradesGrid').innerHTML = grades.map(g => `
+      <div class="grade-card">
+        <div class="grade-card-top ${subjClass(g.subject)}">${g.subject}</div>
+        <div class="grade-card-body">
+          <div class="grade-title">${g.assignment_title}</div>
+          <div class="grade-score-row">
+            <div class="grade-score-box ${scoreClass(g.score)}">${g.score}</div>
+            <div>
+              <div class="grade-label">${scoreLabel(g.score)}</div>
+              <div class="grade-pts">+${g.points_awarded} poin ⭐</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    document.getElementById('gradePanel').style.display = 'none';
+    document.getElementById('studentList').style.display = 'block';
+  });
+
+  document.getElementById('searchBtn').addEventListener('click', searchStudents);
+  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchStudents(); });
+</script>
 </body>
-
 </html>

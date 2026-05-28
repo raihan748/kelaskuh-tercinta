@@ -1,302 +1,441 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-
+<html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live Chat — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script src="/socket.io/socket.io.js"></script>
-    <style>
-        body {
-            height: 100vh;
-            overflow: hidden
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Chat — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
+  <meta name="description" content="Live chat kelas 8B Ahmad bin Hambal SMPIT Al-Fityan."/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/nb.css"/>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    html, body { height: 100%; overflow: hidden; }
 
-        .chat-container {
-            height: calc(100vh - 4rem)
-        }
+    /* Layout */
+    .chat-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-        #messagesBox {
-            scrollbar-width: thin;
-            scrollbar-color: #6366f1 transparent
-        }
+    /* Chat Navbar — full-width fixed bar */
+    .chat-nav {
+      background: var(--black);
+      border-bottom: var(--border);
+      height: 68px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .chat-nav-logo {
+      width: 42px; height: 42px;
+      background: var(--yellow);
+      border: 3px solid var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem; color: var(--black);
+      text-decoration: none; flex-shrink: 0;
+    }
+    .chat-nav-title {
+      flex: 1;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chat-nav-title h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      color: var(--white);
+    }
+    .online-dot {
+      width: 10px; height: 10px;
+      background: var(--mint);
+      border: 2px solid var(--white);
+      border-radius: 50%;
+      display: inline-block;
+      animation: nbPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes nbPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    #onlineCount {
+      font-size: 0.82rem; font-weight: 700; color: var(--yellow);
+    }
+    .chat-nav-links a {
+      color: #aaa; text-decoration: none; font-weight: 700; font-size: 0.82rem;
+      padding: 6px 12px; border: 2px solid transparent;
+      transition: all 0.1s;
+    }
+    .chat-nav-links a:hover { color: var(--black); background: var(--yellow); }
+    @media (max-width: 640px) { .chat-nav-links { display: none; } }
 
-        #messagesBox::-webkit-scrollbar {
-            width: 4px
-        }
+    /* Main */
+    .chat-main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-        #messagesBox::-webkit-scrollbar-thumb {
-            background: #6366f1;
-            border-radius: 9999px
-        }
+    /* Sidebar */
+    .chat-sidebar {
+      width: 200px;
+      background: #111;
+      border-right: var(--border);
+      flex-shrink: 0;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+    @media (max-width: 768px) { .chat-sidebar { display: none; } }
+    .sidebar-section-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #666;
+      padding: 0 16px 8px;
+    }
+    .sidebar-channel {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      font-weight: 700; font-size: 0.9rem;
+      color: var(--yellow);
+      background: #1a1a1a;
+      border-left: 4px solid var(--yellow);
+      margin-bottom: 2px;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 16px;
+      font-weight: 600; font-size: 0.85rem;
+      color: #aaa; text-decoration: none;
+      transition: all 0.1s;
+    }
+    .sidebar-link:hover { background: #1a1a1a; color: var(--white); }
 
-        .toast {
-            animation: slideIn .3s ease, fadeOut .5s ease 3.5s forwards
-        }
+    /* Messages */
+    .chat-messages-wrap {
+      display: flex; flex-direction: column; flex: 1; overflow: hidden;
+    }
+    #messagesBox {
+      flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px;
+      background: #0f0f0f;
+      scrollbar-width: thin; scrollbar-color: var(--yellow) #1a1a1a;
+    }
+    #messagesBox::-webkit-scrollbar { width: 4px; }
+    #messagesBox::-webkit-scrollbar-thumb { background: var(--yellow); }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0
-            }
+    .msg-welcome {
+      text-align: center; padding: 40px 16px;
+      border: 3px dashed #333;
+      margin: 20px auto; max-width: 400px;
+    }
+    .msg-welcome .icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .msg-welcome p { font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: #888; }
 
-            to {
-                transform: translateX(0);
-                opacity: 1
-            }
-        }
+    .chat-msg {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 6px 8px;
+      transition: background 0.1s;
+      animation: msgPop 0.2s ease both;
+    }
+    @keyframes msgPop { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .chat-msg:hover { background: #1a1a1a; }
 
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateX(100%)
-            }
-        }
+    .msg-avatar {
+      width: 34px; height: 34px;
+      border: 2px solid var(--black);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.85rem; color: var(--black);
+      flex-shrink: 0;
+    }
+    .msg-username {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.88rem;
+    }
+    .msg-time { font-size: 0.72rem; color: #555; margin-left: 6px; font-weight: 600; }
+    .msg-text { color: #ddd; font-size: 0.92rem; font-weight: 500; line-height: 1.5; word-break: break-word; }
 
-        .msg-anim {
-            animation: popIn .25s cubic-bezier(.4, 0, .2, 1)
-        }
+    .system-msg {
+      text-align: center; padding: 4px;
+      animation: msgPop 0.2s ease both;
+    }
+    .system-msg span {
+      font-size: 0.75rem; font-weight: 700;
+      background: #1a1a1a; border: 2px solid #333;
+      color: #666; padding: 3px 12px;
+    }
 
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(.9) translateY(8px)
-            }
+    /* Toast */
+    #toastContainer { position: fixed; top: 80px; right: 16px; z-index: 300; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .nb-toast {
+      background: var(--black);
+      border: 3px solid var(--yellow);
+      box-shadow: 4px 4px 0px var(--yellow);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      max-width: 300px;
+      animation: toastIn 0.25s ease both, toastOut 0.4s ease 3.5s forwards;
+    }
+    @keyframes toastIn  { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+    @keyframes toastOut { to{transform:translateX(120%);opacity:0} }
+    .toast-avatar { width: 30px; height: 30px; border: 2px solid var(--yellow); display:flex;align-items:center;justify-content:center; font-family:'Archivo Black',sans-serif; font-size:0.8rem; color:var(--black); flex-shrink:0; }
+    .toast-name { font-family:'Archivo Black',sans-serif; font-size:0.82rem; color:var(--white); }
+    .toast-msg { font-size:0.78rem; color:#aaa; font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0)
-            }
-        }
-    </style>
+    /* Input bar */
+    .chat-input-bar {
+      background: var(--black);
+      border-top: var(--border);
+      padding: 14px 16px;
+      display: flex; align-items: flex-end; gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-input-wrap {
+      flex: 1;
+      border: var(--border);
+      background: #1a1a1a;
+      display: flex; align-items: flex-end; gap: 6px;
+      padding: 8px 12px;
+    }
+    #messageInput {
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem;
+      font-weight: 600; color: var(--white);
+      resize: none; max-height: 120px; overflow-y: auto;
+    }
+    #messageInput::placeholder { color: #555; }
+    #emojiBtn {
+      background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem;
+      transition: color 0.1s; flex-shrink: 0;
+    }
+    #emojiBtn:hover { color: var(--yellow); }
+    #sendBtn {
+      width: 52px; height: 52px; flex-shrink: 0;
+      background: var(--yellow); color: var(--black);
+      border: var(--border);
+      box-shadow: 4px 4px 0px var(--black);
+      cursor: pointer; font-size: 1.1rem;
+      transition: transform 0.08s, box-shadow 0.08s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #sendBtn:hover  { transform: translate(2px,2px); box-shadow: 2px 2px 0px var(--black); }
+    #sendBtn:active { transform: translate(4px,4px); box-shadow: none; }
+
+    /* Emoji picker */
+    #emojiPicker {
+      position: fixed; bottom: 80px; left: 220px;
+      background: #1a1a1a; border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 12px; display: grid; grid-template-columns: repeat(6,1fr); gap: 6px;
+      z-index: 50;
+    }
+    #emojiPicker button {
+      background: none; border: none; font-size: 1.3rem; cursor: pointer;
+      padding: 4px; border-radius: 2px;
+      transition: background 0.1s;
+    }
+    #emojiPicker button:hover { background: #333; }
+
+    /* Username Modal */
+    #usernameModal {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.88);
+    }
+    .username-box {
+      background: var(--bg);
+      border: var(--border);
+      box-shadow: 10px 10px 0px var(--black);
+      padding: 40px 36px;
+      width: 100%; max-width: 420px; margin: 16px;
+      text-align: center;
+      animation: nbModalIn 0.15s ease both;
+    }
+    @keyframes nbModalIn {
+      from{transform:scale(0.9) translate(8px,8px);opacity:0}
+      to{transform:scale(1) translate(0,0);opacity:1}
+    }
+    .username-box .icon { font-size: 3.5rem; margin-bottom: 16px; display: block; }
+    .username-box h2 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.8rem; margin-bottom: 8px;
+    }
+    .username-box p { font-size: 0.95rem; font-weight: 600; color: #555; margin-bottom: 24px; }
+  </style>
 </head>
+<body>
 
-<body class="font-sans bg-gray-900 text-gray-100 transition-colors duration-300 flex flex-col">
+<!-- USERNAME MODAL -->
+<div id="usernameModal">
+  <div class="username-box">
+    <span class="icon">💬</span>
+    <h2>Masuk ke Chat</h2>
+    <p>Masukkan namamu untuk mulai chatting bersama kelas</p>
+    <div class="nb-form-group">
+      <input id="usernameInput" type="text" class="nb-input" placeholder="Nama kamu..." maxlength="20" style="text-align:center;font-size:1.1rem;"/>
+    </div>
+    <button id="enterChat" class="nb-btn nb-btn-black nb-btn-full" style="justify-content:center;font-size:1rem;">
+      Mulai Chat <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
 
-    <!-- USERNAME MODAL -->
-    <div id="usernameModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-        <div class="bg-gray-800 rounded-3xl p-8 w-full max-w-sm mx-4 shadow-2xl text-center">
-            <div class="text-5xl mb-4">💬</div>
-            <h2 class="text-2xl font-black text-white mb-2">Masuk ke Chat</h2>
-            <p class="text-gray-400 text-sm mb-6">Masukkan namamu untuk mulai chatting</p>
-            <input id="usernameInput" type="text" placeholder="Nama kamu..." maxlength="20"
-                class="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 text-center text-lg" />
-            <button id="enterChat"
-                class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition-all hover:scale-105">
-                Mulai Chat <i class="fa-solid fa-arrow-right ml-2"></i>
-            </button>
-        </div>
+<!-- TOAST -->
+<div id="toastContainer"></div>
+
+<div class="chat-layout">
+  <!-- Chat Navbar -->
+  <div class="chat-nav">
+    <a href="/" class="chat-nav-logo">AF</a>
+    <div class="chat-nav-title">
+      <span class="online-dot"></span>
+      <h1>Live Chat Kelas 8B Ahmad bin Hambal</h1>
+      <span id="onlineCount"></span>
+    </div>
+    <div class="chat-nav-links">
+      <a href="/"><i class="fa-solid fa-home"></i></a>
+      <a href="/forum.html"><i class="fa-solid fa-comments"></i> Forum</a>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="chat-main">
+    <!-- Sidebar -->
+    <div class="chat-sidebar">
+      <div class="sidebar-section-title">Channels</div>
+      <div class="sidebar-channel"><i class="fa-solid fa-hashtag" style="font-size:0.7rem;"></i> umum</div>
+      <br/>
+      <div class="sidebar-section-title">Quick Links</div>
+      <a href="/assignments.html" class="sidebar-link"><i class="fa-solid fa-book-open"></i> Tugas</a>
+      <a href="/grades.html" class="sidebar-link"><i class="fa-solid fa-chart-bar"></i> Nilai</a>
+      <a href="/forum.html" class="sidebar-link"><i class="fa-solid fa-comments"></i> Forum</a>
+      <a href="/kapsul-waktu.html" class="sidebar-link"><i class="fa-solid fa-hourglass"></i> Kapsul</a>
     </div>
 
-    <!-- TOAST CONTAINER -->
-    <div id="toastContainer" class="fixed top-4 right-4 z-[200] space-y-2 pointer-events-none"></div>
-
-    <!-- NAVBAR -->
-    <nav class="bg-gray-900 border-b border-gray-800 h-16 flex items-center px-4 gap-4 flex-shrink-0 z-10">
-        <a href="/"
-            class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold hover:bg-indigo-500 transition-colors">AF</a>
-        <div class="flex items-center gap-2 flex-1">
-            <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
-            <h1 class="text-white font-bold">Live Chat Kelas 8B Ahmad bin Hambal</h1>
-            <span id="onlineCount" class="text-gray-400 text-sm"></span>
+    <!-- Messages -->
+    <div class="chat-messages-wrap">
+      <div id="messagesBox">
+        <div class="msg-welcome">
+          <span class="icon">👋</span>
+          <p>Selamat datang di #umum!<br/>Mulailah percakapan.</p>
         </div>
-        <a href="/"
-            class="hidden md:flex items-center gap-1.5 text-gray-400 hover:text-white text-sm transition-colors">
-            <i class="fa-solid fa-home"></i>
-        </a>
-        <a href="/forum.html"
-            class="hidden md:flex items-center gap-1.5 text-gray-400 hover:text-white text-sm transition-colors">
-            <i class="fa-solid fa-comments"></i> Forum
-        </a>
-        <button id="darkToggle"
-            class="w-9 h-9 rounded-xl bg-gray-800 text-gray-400 flex items-center justify-center hover:text-white hover:bg-gray-700 transition-all">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-    </nav>
+      </div>
 
-    <!-- MAIN CHAT AREA -->
-    <div class="flex flex-1 overflow-hidden">
-        <!-- Sidebar -->
-        <div class="hidden md:flex w-56 bg-gray-800 border-r border-gray-700 flex-col flex-shrink-0">
-            <div class="p-4 border-b border-gray-700">
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Channels</div>
-                <div
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-600/30 border border-indigo-500/30 text-indigo-300">
-                    <i class="fa-solid fa-hashtag text-xs"></i>
-                    <span class="font-semibold text-sm">umum</span>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Quick Links</div>
-                <a href="/assignments.html"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-all text-sm">
-                    <i class="fa-solid fa-book-open text-xs"></i>Tugas
-                </a>
-                <a href="/grades.html"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-all text-sm">
-                    <i class="fa-solid fa-chart-bar text-xs"></i>Nilai
-                </a>
-                <a href="/forum.html"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700 transition-all text-sm">
-                    <i class="fa-solid fa-comments text-xs"></i>Forum
-                </a>
-            </div>
+      <!-- Input -->
+      <div class="chat-input-bar">
+        <div class="chat-input-wrap">
+          <textarea id="messageInput" placeholder="Kirim pesan ke #umum..." rows="1"></textarea>
+          <button id="emojiBtn" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
         </div>
-
-        <!-- Messages -->
-        <div class="flex flex-col flex-1 overflow-hidden">
-            <div id="messagesBox" class="flex-1 overflow-y-auto p-4 space-y-1">
-                <div class="text-center p-8">
-                    <div class="text-4xl mb-3">👋</div>
-                    <p class="text-gray-400 text-sm">Selamat datang di <strong class="text-white">#umum</strong>!
-                        Mulaikanlah percakapan.</p>
-                </div>
-            </div>
-
-            <!-- Input -->
-            <div class="p-4 bg-gray-800 border-t border-gray-700 flex gap-3 items-end">
-                <div class="flex-1 bg-gray-700 rounded-2xl px-4 py-3 flex items-end gap-2">
-                    <textarea id="messageInput" placeholder="Kirim pesan ke #umum..." rows="1"
-                        class="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none resize-none text-sm max-h-32 overflow-y-auto"></textarea>
-                    <button id="emojiBtn" class="text-gray-400 hover:text-yellow-400 transition-colors flex-shrink-0"
-                        title="Emoji">
-                        <i class="fa-regular fa-face-smile text-lg"></i>
-                    </button>
-                </div>
-                <button id="sendBtn"
-                    class="w-12 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition-all hover:scale-105 flex-shrink-0 shadow-lg">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
+        <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        // Dark mode init
-        const root = document.documentElement;
-        if (localStorage.getItem('theme') === 'light') { /* keep dark for chat */ }
+<script>
+  let myUsername = '', myColor = '#FFE033', socket;
 
-        let myUsername = '';
-        let myColor = '#6366f1';
-        let socket;
+  const emojis = ['😀','😂','🥰','😎','🤔','😯','👍','👏','🔥','💪','🎉','❤️','😅','😭','🙏','⭐','💡','🚀'];
 
-        const emojis = ['😀', '😂', '🥰', '😎', '🤔', '😯', '👍', '👏', '🔥', '💪', '🎉', '❤️', '😅', '😭', '🙏', '⭐', '💡', '🚀'];
-        let emojiOpen = false;
-        document.getElementById('emojiBtn').addEventListener('click', () => {
-            const existing = document.getElementById('emojiPicker');
-            if (existing) { existing.remove(); emojiOpen = false; return; }
-            const picker = document.createElement('div');
-            picker.id = 'emojiPicker';
-            picker.className = 'absolute bottom-20 left-4 bg-gray-700 border border-gray-600 rounded-2xl p-3 grid grid-cols-6 gap-2 shadow-xl z-50';
-            picker.style.position = 'fixed';
-            picker.style.bottom = '90px';
-            picker.style.left = '260px';
-            emojis.forEach(e => {
-                const btn = document.createElement('button');
-                btn.className = 'text-xl hover:scale-125 transition-transform';
-                btn.textContent = e;
-                btn.onclick = () => { document.getElementById('messageInput').value += e; picker.remove(); };
-                picker.appendChild(btn);
-            });
-            document.body.appendChild(picker);
-            emojiOpen = true;
-            document.addEventListener('click', (evt) => {
-                if (!picker.contains(evt.target) && evt.target !== document.getElementById('emojiBtn')) picker.remove();
-            }, { once: true });
-        });
+  document.getElementById('emojiBtn').addEventListener('click', () => {
+    const existing = document.getElementById('emojiPicker');
+    if (existing) { existing.remove(); return; }
+    const picker = document.createElement('div');
+    picker.id = 'emojiPicker';
+    emojis.forEach(e => {
+      const btn = document.createElement('button');
+      btn.textContent = e;
+      btn.onclick = () => { document.getElementById('messageInput').value += e; picker.remove(); };
+      picker.appendChild(btn);
+    });
+    document.body.appendChild(picker);
+    setTimeout(() => document.addEventListener('click', () => picker.remove(), { once: true }), 50);
+  });
 
-        function showToast(username, message, color) {
-            if (document.hasFocus()) return;
-            const t = document.createElement('div');
-            t.className = 'toast flex items-start gap-3 bg-gray-800 border border-gray-700 rounded-2xl p-3 shadow-xl max-w-sm';
-            t.innerHTML = `
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:${color}">${username[0].toUpperCase()}</div>
-      <div><div class="text-white text-sm font-semibold">${username}</div><div class="text-gray-400 text-xs truncate max-w-[200px]">${message}</div></div>
+  function showToast(username, message, color) {
+    if (document.hasFocus()) return;
+    const t = document.createElement('div');
+    t.className = 'nb-toast';
+    t.innerHTML = `
+      <div class="toast-avatar" style="background:${color};">${username[0].toUpperCase()}</div>
+      <div><div class="toast-name">${username}</div><div class="toast-msg">${message}</div></div>
     `;
-            document.getElementById('toastContainer').appendChild(t);
-            setTimeout(() => t.remove(), 4500);
-        }
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 4500);
+  }
 
-        function appendMessage(data) {
-            const box = document.getElementById('messagesBox');
-            const el = document.createElement('div');
+  function escapeHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+  }
 
-            if (data.type === 'system') {
-                el.className = 'msg-anim text-center py-1';
-                el.innerHTML = `<span class="text-gray-500 text-xs px-3 py-1 bg-gray-800 rounded-full">${data.text} · ${data.time}</span>`;
-            } else {
-                const isMe = data.username === myUsername;
-                el.className = 'msg-anim flex items-start gap-3 group hover:bg-white/5 px-2 py-1 rounded-xl transition-colors';
-                el.innerHTML = `
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5" style="background:${data.color}">${data.username[0].toUpperCase()}</div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-baseline gap-2 mb-0.5">
-            <span class="text-sm font-semibold" style="color:${data.color}">${data.username}${isMe ? ' (Kamu)' : ''}</span>
-            <span class="text-gray-500 text-xs">${data.time}</span>
+  function appendMessage(data) {
+    const box = document.getElementById('messagesBox');
+    const el = document.createElement('div');
+    if (data.type === 'system') {
+      el.className = 'system-msg';
+      el.innerHTML = `<span>${data.text} · ${data.time}</span>`;
+    } else {
+      const isMe = data.username === myUsername;
+      el.className = 'chat-msg';
+      el.innerHTML = `
+        <div class="msg-avatar" style="background:${data.color};">${data.username[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div>
+            <span class="msg-username" style="color:${data.color};">${data.username}${isMe ? ' (Kamu)' : ''}</span>
+            <span class="msg-time">${data.time}</span>
           </div>
-          <p class="text-gray-200 text-sm break-words">${escapeHtml(data.message)}</p>
+          <div class="msg-text">${escapeHtml(data.message)}</div>
         </div>
       `;
-                if (!isMe) showToast(data.username, data.message, data.color);
-            }
-            box.appendChild(el);
-            box.scrollTop = box.scrollHeight;
-        }
+      if (!isMe) showToast(data.username, data.message, data.color);
+    }
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+  }
 
-        function escapeHtml(t) {
-            return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
-        }
+  function initSocket(username) {
+    socket = io();
+    socket.emit('join', { username });
+    socket.on('color_assigned', ({ color }) => { myColor = color; });
+    socket.on('online_count', ({ count }) => {
+      document.getElementById('onlineCount').textContent = `· ${count} online`;
+    });
+    socket.on('chat_message', appendMessage);
+  }
 
-        function initSocket(username) {
-            socket = io();
-            socket.emit('join', { username });
-            socket.on('color_assigned', ({ color }) => { myColor = color; });
-            socket.on('online_count', ({ count }) => {
-                document.getElementById('onlineCount').textContent = `· ${count} online`;
-            });
-            socket.on('chat_message', appendMessage);
-        }
+  function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    socket.emit('send_message', { message: msg });
+    input.value = '';
+    input.style.height = 'auto';
+  }
 
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const msg = input.value.trim();
-            if (!msg) return;
-            socket.emit('send_message', { message: msg });
-            input.value = '';
-            input.style.height = 'auto';
-        }
+  document.getElementById('enterChat').addEventListener('click', async () => {
+    const name = document.getElementById('usernameInput').value.trim();
+    if (!name) { document.getElementById('usernameInput').focus(); return; }
+    myUsername = name;
+    document.getElementById('usernameModal').style.display = 'none';
+    const r = await fetch('/api/chat');
+    const history = await r.json();
+    history.forEach(m => appendMessage({
+      type: 'user', username: m.username, message: m.message, color: m.color,
+      time: (m.created_at.split(' ')[1] || '').substring(0, 5),
+    }));
+    initSocket(name);
+  });
 
-        document.getElementById('enterChat').addEventListener('click', async () => {
-            const name = document.getElementById('usernameInput').value.trim();
-            if (!name) { document.getElementById('usernameInput').focus(); return; }
-            myUsername = name;
-            document.getElementById('usernameModal').classList.add('hidden');
-
-            // Load history
-            const r = await fetch('/api/chat');
-            const history = await r.json();
-            history.forEach(m => appendMessage({
-                type: 'user', username: m.username, message: m.message, color: m.color,
-                time: m.created_at.split(' ')[1]?.substring(0, 5) || '',
-            }));
-            initSocket(name);
-        });
-
-        document.getElementById('usernameInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('enterChat').click(); });
-        document.getElementById('sendBtn').addEventListener('click', sendMessage);
-        document.getElementById('messageInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-        });
-        document.getElementById('messageInput').addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 128) + 'px';
-        });
-    </script>
+  document.getElementById('usernameInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('enterChat').click(); });
+  document.getElementById('sendBtn').addEventListener('click', sendMessage);
+  document.getElementById('messageInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  document.getElementById('messageInput').addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  });
+</script>
 </body>
-
 </html>

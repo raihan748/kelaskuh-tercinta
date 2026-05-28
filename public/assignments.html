@@ -1,169 +1,293 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-
+<html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tugas — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2)
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tugas — SMPIT Al-Fityan 8B Ahmad bin Hambal</title>
+  <meta name="description" content="Daftar tugas kelas 8B Ahmad bin Hambal SMPIT Al-Fityan."/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/nb.css"/>
+  <style>
+    .page-hero {
+      background: var(--mint);
+      border-bottom: var(--border);
+      padding: 48px 24px 40px;
+    }
+    .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+    .page-hero h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 10px;
+    }
+    .page-hero p { font-size: 1.05rem; font-weight: 600; color: rgba(0,0,0,0.65); }
 
-        .dark .glass {
-            background: rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.1)
-        }
+    /* Filters */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 1200px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+    .filter-btn {
+      padding: 10px 20px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: var(--border3);
+      background: var(--white);
+      color: var(--black);
+      box-shadow: 4px 4px 0px var(--black);
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .filter-btn:hover  { transform: translate(2px,2px); box-shadow: 2px 2px 0px var(--black); }
+    .filter-btn.active { background: var(--black); color: var(--yellow); }
 
-        .card-hover {
-            transition: all .3s cubic-bezier(.4, 0, .2, 1)
-        }
+    /* Grid */
+    .assignments-section {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 24px 80px;
+    }
+    .assignments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 22px;
+    }
 
-        .card-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .15)
-        }
-    </style>
+    /* Card */
+    .task-card {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: var(--white);
+      transition: transform 0.08s, box-shadow 0.08s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .task-card:hover  { transform: translate(4px,4px); box-shadow: 3px 3px 0px var(--black); }
+    .task-card:active { transform: translate(8px,8px); box-shadow: none; }
+
+    .task-card-top {
+      padding: 6px 16px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-bottom: 3px solid var(--black);
+      color: var(--black);
+    }
+    .task-card-body { padding: 22px; flex: 1; }
+    .task-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: var(--black);
+    }
+    .task-desc { font-size: 0.9rem; font-weight: 500; color: #444; line-height: 1.6; margin-bottom: 18px; }
+    .task-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .task-date {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Subject colors */
+    .subj-Matematika    { background: var(--cyan); }
+    .subj-IPA           { background: var(--mint); }
+    .subj-IPS           { background: var(--orange); color: white; }
+    .subj-Bahasa-Indonesia { background: var(--red); color: white; }
+    .subj-Bahasa-Inggris{ background: var(--purple); color: white; }
+    .subj-TIK           { background: var(--yellow); }
+    .subj-PAI           { background: var(--pink); color: white; }
+    .subj-Seni-Budaya   { background: #E8FF00; }
+    .subj-default       { background: var(--black); color: var(--yellow); }
+
+    .deadline-ok   { background: var(--mint); border-color: var(--black); color: var(--black); }
+    .deadline-warn { background: var(--orange); color: white; border-color: var(--black); }
+    .deadline-hot  { background: var(--red); color: white; border-color: var(--black); animation: nbPulse 1s ease-in-out infinite; }
+    .deadline-done { background: #ddd; color: #666; border-color: #999; }
+    @keyframes nbPulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
+
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 24px;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    .empty-state .icon { font-size: 4rem; margin-bottom: 16px; display: block; }
+    .empty-state p { font-family: 'Archivo Black', sans-serif; font-size: 1.2rem; color: #555; }
+  </style>
 </head>
+<body>
 
-<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 to-cyan-500 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-bold">AF
-                </div>
-                <span class="text-white font-bold">Al-Fityan 8B</span>
-            </a>
-            <div class="hidden md:flex items-center gap-5 text-white/90 text-sm font-medium">
-                <a href="/" class="hover:text-white transition-colors">Beranda</a>
-                <a href="/assignments.html" class="text-white font-bold border-b-2 border-white pb-0.5">Tugas</a>
-                <a href="/grades.html" class="hover:text-white transition-colors">Nilai</a>
-                <a href="/chat.html" class="hover:text-white transition-colors">Chat</a>
-                <a href="/forum.html" class="hover:text-white transition-colors">Forum</a>
-                <a href="/kapsul-waktu.html" class="hover:text-white transition-colors">Kapsul Waktu</a>
-            </div>
-            <button id="darkToggle"
-                class="w-9 h-9 rounded-xl bg-white/20 text-white flex items-center justify-center hover:scale-110 transition-transform">
-                <i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline"></i>
-            </button>
-        </div>
-    </nav>
-
-    <div class="pt-24 pb-16 px-4 max-w-7xl mx-auto">
-        <div class="mb-10">
-            <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">📚 Daftar Tugas</h1>
-            <p class="text-gray-500 dark:text-gray-400">Semua tugas kelas 8B Ahmad bin Hambal — pantau deadline dengan
-                bijak!</p>
-        </div>
-
-        <!-- Filters -->
-        <div class="flex flex-wrap gap-3 mb-8" id="subjectFilters">
-            <button onclick="filterSubject('all')"
-                class="filter-btn active px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-blue-500 text-white"
-                data-subject="all">Semua</button>
-        </div>
-
-        <div id="assignmentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-16 text-gray-400"><i
-                    class="fa-solid fa-spinner fa-spin text-3xl mb-3 block"></i>Memuat tugas...</div>
-        </div>
+<!-- NAVBAR -->
+<nav class="nb-nav" id="mainNav">
+  <a href="/" class="nb-nav-brand">
+    <div class="nb-nav-logo">AF</div>
+    <div class="nb-nav-title">
+      <span>SMPIT Al-Fityan</span>
+      <span>Kelas 8B Ahmad bin Hambal</span>
     </div>
+  </a>
+  <ul class="nb-nav-links">
+    <li><a href="/">Beranda</a></li>
+    <li><a href="/assignments.html" class="active">Tugas</a></li>
+    <li><a href="/grades.html">Nilai</a></li>
+    <li><a href="/chat.html">Chat</a></li>
+    <li><a href="/forum.html">Forum</a></li>
+    <li><a href="/kapsul-waktu.html">Kapsul Waktu</a></li>
+  </ul>
+  <button class="nb-mob-btn" id="mobileMenuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+</nav>
+<div class="nb-mob-menu" id="mobileMenu">
+  <a href="/">Beranda</a>
+  <a href="/assignments.html" class="active">Tugas</a>
+  <a href="/grades.html">Nilai</a>
+  <a href="/chat.html">Chat</a>
+  <a href="/forum.html">Forum</a>
+  <a href="/kapsul-waktu.html">Kapsul Waktu</a>
+</div>
 
-    <script>
-        // Dark mode
-        const root = document.documentElement;
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme:dark)').matches)) root.classList.add('dark');
-        document.getElementById('darkToggle').addEventListener('click', () => { root.classList.toggle('dark'); localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light') });
+<div class="nb-page">
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="nb-tag">📚 Daftar Tugas</div>
+      <h1>Tugas Kelas 8B<br/>Ahmad bin Hambal</h1>
+      <p>Pantau semua tugas dengan deadline — jangan sampai ketinggalan!</p>
+    </div>
+  </div>
 
-        const subjectColors = {
-            'Matematika': 'from-blue-400 to-blue-600',
-            'Bahasa Indonesia': 'from-red-400 to-red-600',
-            'IPA': 'from-green-400 to-emerald-600',
-            'IPS': 'from-amber-400 to-orange-500',
-            'Bahasa Inggris': 'from-purple-400 to-purple-600',
-            'TIK': 'from-cyan-400 to-teal-600',
-            'PAI': 'from-teal-400 to-green-600',
-            'Seni Budaya': 'from-pink-400 to-rose-600',
-        };
-        const defaultColor = 'from-gray-400 to-gray-600';
+  <!-- FILTERS -->
+  <div class="filter-bar" id="subjectFilters">
+    <button class="filter-btn active" data-subject="all" onclick="filterSubject('all',this)">Semua</button>
+  </div>
 
-        let all = [];
-        let activeSubject = 'all';
+  <!-- ASSIGNMENTS GRID -->
+  <div class="assignments-section">
+    <div class="assignments-grid" id="assignmentsGrid">
+      <div class="empty-state">
+        <span class="icon"><i class="fa-solid fa-spinner fa-spin"></i></span>
+        <p>Memuat tugas...</p>
+      </div>
+    </div>
+  </div>
 
-        function daysLeft(due) {
-            if (!due) return null;
-            const diff = Math.ceil((new Date(due) - new Date()) / (1000 * 60 * 60 * 24));
-            return diff;
-        }
+  <!-- FOOTER -->
+  <footer class="nb-footer">
+    <div class="nb-footer-inner">
+      <div class="nb-footer-box">
+        <p>Crafted with ♥ by Raihan for SMPIT Al-Fityan 8B</p>
+      </div>
+      <div class="nb-footer-links">
+        <a href="/">Beranda</a><a href="/assignments.html">Tugas</a>
+        <a href="/grades.html">Nilai</a><a href="/chat.html">Chat</a>
+        <a href="/forum.html">Forum</a><a href="/kapsul-waktu.html">Kapsul Waktu</a>
+      </div>
+      <p class="nb-footer-copy">SMPIT Al-Fityan — Kelas 8B Ahmad bin Hambal — 2025/2026</p>
+    </div>
+  </footer>
+</div>
 
-        function deadlineBadge(due) {
-            if (!due) return '';
-            const d = daysLeft(due);
-            const label = due;
-            if (d < 0) return `<span class="px-2 py-1 rounded-full text-xs font-bold bg-gray-200 dark:bg-gray-700 text-gray-500">Selesai</span>`;
-            if (d === 0) return `<span class="px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 animate-pulse">Hari ini!</span>`;
-            if (d <= 3) return `<span class="px-2 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">${d} hari lagi ⚠️</span>`;
-            return `<span class="px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">${d} hari lagi</span>`;
-        }
+<script>
+  // Mobile menu
+  document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
 
-        function render() {
-            const data = activeSubject === 'all' ? all : all.filter(a => a.subject === activeSubject);
-            if (!data.length) {
-                document.getElementById('assignmentsGrid').innerHTML = '<div class="col-span-full text-center py-16 text-gray-400">Tidak ada tugas ditemukan.</div>';
-                return;
-            }
-            document.getElementById('assignmentsGrid').innerHTML = data.map(a => `
-      <div class="card-hover bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-        <div class="h-2 bg-gradient-to-r ${subjectColors[a.subject] || defaultColor}"></div>
-        <div class="p-6">
-          <div class="flex items-start justify-between gap-2 mb-3">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${subjectColors[a.subject] || defaultColor} text-white">${a.subject}</span>
+  const subjectColorClass = s => {
+    const map = {
+      'Matematika': 'subj-Matematika',
+      'IPA': 'subj-IPA',
+      'IPS': 'subj-IPS',
+      'Bahasa Indonesia': 'subj-Bahasa-Indonesia',
+      'Bahasa Inggris': 'subj-Bahasa-Inggris',
+      'TIK': 'subj-TIK',
+      'PAI': 'subj-PAI',
+      'Seni Budaya': 'subj-Seni-Budaya',
+    };
+    return map[s] || 'subj-default';
+  };
+
+  function daysLeft(due) {
+    if (!due) return null;
+    return Math.ceil((new Date(due) - new Date()) / 86400000);
+  }
+
+  function deadlineBadge(due) {
+    if (!due) return '';
+    const d = daysLeft(due);
+    if (d < 0)  return `<span class="nb-badge deadline-done">Selesai</span>`;
+    if (d === 0) return `<span class="nb-badge deadline-hot">Hari ini! ⚡</span>`;
+    if (d <= 3)  return `<span class="nb-badge deadline-warn">${d} hari lagi ⚠️</span>`;
+    return `<span class="nb-badge deadline-ok">${d} hari lagi</span>`;
+  }
+
+  let all = [], activeSubject = 'all';
+
+  function render() {
+    const data = activeSubject === 'all' ? all : all.filter(a => a.subject === activeSubject);
+    const grid = document.getElementById('assignmentsGrid');
+    if (!data.length) {
+      grid.innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>Tidak ada tugas ditemukan.</p></div>`;
+      return;
+    }
+    grid.innerHTML = data.map(a => `
+      <div class="task-card">
+        <div class="task-card-top ${subjectColorClass(a.subject)}">${a.subject}</div>
+        <div class="task-card-body">
+          <h3 class="task-title">${a.title}</h3>
+          <p class="task-desc">${a.description || 'Tidak ada deskripsi.'}</p>
+          <div class="task-footer">
+            <div class="task-date"><i class="fa-regular fa-calendar"></i> ${a.due_date || 'Tidak ada'}</div>
             ${deadlineBadge(a.due_date)}
-          </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">${a.title}</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm mb-4 line-clamp-2">${a.description || 'Tidak ada deskripsi.'}</p>
-          <div class="flex items-center gap-2 text-gray-400 text-xs">
-            <i class="fa-regular fa-calendar"></i>
-            <span>Deadline: <strong class="text-gray-600 dark:text-gray-300">${a.due_date || 'Tidak ada'}</strong></span>
           </div>
         </div>
       </div>
     `).join('');
-        }
+  }
 
-        function filterSubject(subj) {
-            activeSubject = subj;
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                const isActive = b.dataset.subject === subj;
-                b.className = `filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all ${isActive ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700'}`;
-            });
-            render();
-        }
+  function filterSubject(subj, el) {
+    activeSubject = subj;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+    render();
+  }
 
-        async function load() {
-            const r = await fetch('/api/assignments');
-            all = await r.json();
-            const subjects = [...new Set(all.map(a => a.subject))];
-            const filterBar = document.getElementById('subjectFilters');
-            subjects.forEach(s => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700';
-                btn.dataset.subject = s;
-                btn.textContent = s;
-                btn.onclick = () => filterSubject(s);
-                filterBar.appendChild(btn);
-            });
-            render();
-        }
-        load();
-    </script>
+  async function load() {
+    const r = await fetch('/api/assignments');
+    all = await r.json();
+    const subjects = [...new Set(all.map(a => a.subject))];
+    const bar = document.getElementById('subjectFilters');
+    subjects.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.subject = s;
+      btn.textContent = s;
+      btn.onclick = () => filterSubject(s, btn);
+      bar.appendChild(btn);
+    });
+    render();
+  }
+  load();
+</script>
 </body>
-
 </html>
