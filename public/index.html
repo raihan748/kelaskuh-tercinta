@@ -1,447 +1,1383 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SMPIT Al-Fityan 8B Ahmad bin Hambal — Beranda</title>
   <meta name="description"
-    content="Website kelas premium SMPIT Al-Fityan 8B Ahmad bin Hambal — Tugas, Nilai, Leaderboard, Chat, Forum & Cyber Edu-Hub" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'float2': 'float 8s ease-in-out infinite 2s',
-            'float3': 'float 7s ease-in-out infinite 4s',
-            'shimmer': 'shimmer 2s infinite',
-            'fadeInUp': 'fadeInUp 0.7s ease both',
-          },
-          keyframes: {
-            float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
-            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
-            fadeInUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-          },
-        }
-      }
-    }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    content="Portal kelas SMPIT Al-Fityan 8B Ahmad bin Hambal — Tugas, Nilai, Leaderboard, Chat, Forum & Kapsul Waktu" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    /* ==========================================
+       NEO-BRUTALISM DESIGN SYSTEM
+       ========================================== */
+    :root {
+      --bg: #FFFDF6;
+      --black: #0A0A0A;
+      --white: #FFFFFF;
+      --yellow: #FFE033;
+      --pink: #FF3EA5;
+      --mint: #00E5A0;
+      --orange: #FF6B2B;
+      --cyan: #00C8FF;
+      --purple: #9B5CF7;
+      --border: 4px solid #0A0A0A;
+      --shadow: 6px 6px 0px #0A0A0A;
+      --shadow-hover: 2px 2px 0px #0A0A0A;
+      --radius: 0px;
     }
 
-    .dark .glass {
-      background: rgba(0, 0, 0, 0.2);
-      border-color: rgba(255, 255, 255, 0.1);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .hero-gradient {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 65%, #f5576c 100%);
+    html {
+      scroll-behavior: smooth;
     }
 
-    .card-hover {
-      transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg);
+      color: var(--black);
+      overflow-x: hidden;
     }
 
-    .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    /* ==========================================
+       BRUTALIST UTILITY CLASSES
+       ========================================== */
+    .brut-border {
+      border: var(--border);
+    }
+
+    .brut-shadow {
+      box-shadow: var(--shadow);
+    }
+
+    .brut-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      text-decoration: none;
+      color: var(--black);
+      background: var(--white);
+      user-select: none;
+    }
+
+    .brut-btn:hover {
+      transform: translate(4px, 4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .brut-btn:active {
+      transform: translate(6px, 6px);
+      box-shadow: 0px 0px 0px var(--black);
+    }
+
+    .brut-card {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .brut-card:hover {
+      transform: translate(4px, 4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .brut-card:active {
+      transform: translate(6px, 6px);
+      box-shadow: 0px 0px 0px var(--black);
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 3px solid var(--black);
+      box-shadow: 3px 3px 0px var(--black);
+      background: var(--yellow);
+      margin-bottom: 16px;
+    }
+
+    /* ==========================================
+       NAVBAR
+       ========================================== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--black);
+      border-bottom: 4px solid var(--yellow);
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--yellow);
+      border: 3px solid var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.1rem;
+      color: var(--black);
+      box-shadow: 3px 3px 0px var(--yellow);
+      flex-shrink: 0;
+    }
+
+    .nav-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-title span:first-child {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .nav-title span:last-child {
+      font-size: 0.72rem;
+      color: var(--yellow);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 8px 14px;
+      border: 2px solid transparent;
+      letter-spacing: 0.02em;
+      transition: all 0.1s ease;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      color: var(--black);
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #adminBtn {
+      background: var(--pink);
+      color: var(--white);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.85rem;
+      padding: 10px 20px;
+      border: 3px solid var(--white);
+      box-shadow: 3px 3px 0px var(--yellow);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #adminBtn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--yellow);
+    }
+
+    #adminBtn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 0px 0px 0px var(--yellow);
+    }
+
+    #mobileMenuBtn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    #mobileMenu {
+      display: none;
+      flex-direction: column;
+      background: var(--black);
+      border-top: 3px solid var(--yellow);
+      padding: 12px 0;
+    }
+
+    #mobileMenu a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-bottom: 1px solid #222;
+      transition: background 0.1s;
+    }
+
+    #mobileMenu a:hover {
+      background: var(--yellow);
+      color: var(--black);
+    }
+
+    /* ==========================================
+       HERO SECTION
+       ========================================== */
+    #hero {
+      min-height: 100vh;
+      background: var(--yellow);
+      border-bottom: var(--border);
+      display: flex;
+      align-items: center;
+      padding-top: 68px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Brutalist background pattern */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          rgba(0,0,0,0.04) 40px,
+          rgba(0,0,0,0.04) 42px
+        );
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--black);
+      color: var(--yellow);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border: 3px solid var(--black);
+      margin-bottom: 28px;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #00E5A0;
+      display: inline-block;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .hero-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      line-height: 1.0;
+      color: var(--black);
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .accent {
+      color: var(--white);
+      background: var(--black);
+      padding: 0 8px;
+      display: inline-block;
+      transform: rotate(-1.5deg);
+      margin-top: 6px;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--black);
+      max-width: 600px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      border-left: 5px solid var(--black);
+      padding-left: 16px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .btn-primary {
+      background: var(--black);
+      color: var(--yellow);
+      border: var(--border);
+      box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+    }
+
+    .btn-primary:hover {
+      color: var(--yellow);
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    }
+
+    .btn-primary:active {
+      color: var(--yellow);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 28px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .stat-number {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+      color: var(--black);
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* Decorative shapes */
+    .hero-deco {
+      position: absolute;
+      right: -40px;
+      bottom: 60px;
+      width: 320px;
+      height: 320px;
+      border: var(--border);
+      background: var(--pink);
+      box-shadow: 10px 10px 0px var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 120px;
+      transform: rotate(8deg);
+      z-index: 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero-deco { display: none; }
+    }
+
+    /* ==========================================
+       FEATURES SECTION
+       ========================================== */
+    #features {
+      background: var(--bg);
+      padding: 100px 24px;
+      border-bottom: var(--border);
+    }
+
+    .section-header {
+      max-width: 1200px;
+      margin: 0 auto 60px;
+    }
+
+    .section-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      padding: 36px 28px;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card .card-icon {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      display: block;
+      line-height: 1;
+    }
+
+    .feature-card h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.5rem;
+      color: var(--black);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: rgba(0,0,0,0.7);
+      line-height: 1.6;
+    }
+
+    .feature-card .card-arrow {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      border: 2px solid var(--black);
+      transition: transform 0.08s ease;
+    }
+
+    .feature-card:hover .card-arrow {
+      transform: translate(3px, -3px);
+    }
+
+    .card-tugas     { background: #00E5A0; }
+    .card-nilai     { background: #00C8FF; }
+    .card-chat      { background: #FF3EA5; }
+    .card-forum     { background: #FF6B2B; }
+    .card-kapsul    { background: #9B5CF7; color: white; }
+    .card-leader    { background: #FFE033; }
+
+    .card-kapsul h3,
+    .card-kapsul p  { color: var(--white); }
+    .card-kapsul .card-arrow { background: var(--white); color: var(--black); }
+
+    .new-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--black);
+      color: var(--yellow);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ==========================================
+       GALLERY SECTION
+       ========================================== */
+    #gallery {
+      background: var(--black);
+      padding: 100px 0;
+      border-bottom: var(--border);
+    }
+
+    #gallery .section-header {
+      padding: 0 24px;
+    }
+
+    #gallery .section-title {
+      color: var(--white);
+    }
+
+    #gallery .section-sub {
+      color: #aaa;
+    }
+
+    .gallery-wrapper {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-wrapper::before,
+    .gallery-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .gallery-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, var(--black), transparent);
+    }
+
+    .gallery-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, var(--black), transparent);
     }
 
     .gallery-track {
-      animation: scroll-gallery 30s linear infinite;
+      display: flex;
+      gap: 16px;
+      animation: scrollGallery 30s linear infinite;
+      width: max-content;
     }
 
     .gallery-track:hover {
       animation-play-state: paused;
     }
 
-    @keyframes scroll-gallery {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(-50%);
-      }
+    @keyframes scrollGallery {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    .rank-1 {
-      background: linear-gradient(135deg, #ffd700, #ff9500);
-    }
-
-    .rank-2 {
-      background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
-    }
-
-    .rank-3 {
-      background: linear-gradient(135deg, #cd7f32, #a0522d);
-    }
-
-    .rank-4,
-    .rank-5 {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    }
-
-    .nav-link {
+    .gallery-item {
+      flex-shrink: 0;
+      width: 260px;
+      height: 200px;
+      border: 4px solid #fff;
+      overflow: hidden;
       position: relative;
     }
 
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: white;
-      transition: width 0.3s ease;
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .nav-link:hover::after {
+    .gallery-empty {
+      text-align: center;
+      padding: 60px 24px;
+      border: 4px dashed #555;
+      margin: 0 24px;
+    }
+
+    .gallery-empty p {
+      color: #888;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .gallery-caption {
+      text-align: center;
+      margin-top: 24px;
+      color: #888;
+      font-size: 0.9rem;
+      padding: 0 24px;
+    }
+
+    /* ==========================================
+       LEADERBOARD SECTION
+       ========================================== */
+    #leaderboard {
+      background: var(--bg);
+      padding: 100px 24px;
+      border-bottom: var(--border);
+    }
+
+    .leaderboard-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    #leaderboardList {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      border: var(--border);
+      background: var(--white);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      cursor: default;
+    }
+
+    .lb-row:hover {
+      transform: translate(4px, 4px);
+      box-shadow: var(--shadow-hover) !important;
+    }
+
+    .lb-rank {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.6rem;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .lb-avatar {
+      width: 46px;
+      height: 46px;
+      border: 3px solid var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+
+    .lb-info {
+      flex: 1;
+    }
+
+    .lb-name {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.1rem;
+      color: var(--black);
+    }
+
+    .lb-nis {
+      font-size: 0.82rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .lb-points {
+      text-align: right;
+    }
+
+    .lb-points-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.8rem;
+      color: var(--black);
+    }
+
+    .lb-points-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* Rank-specific styling */
+    .lb-row-1 { background: var(--yellow); box-shadow: var(--shadow); }
+    .lb-row-2 { background: #E8E8E8;      box-shadow: var(--shadow); }
+    .lb-row-3 { background: #FFD4A3;      box-shadow: var(--shadow); }
+    .lb-row-4,
+    .lb-row-5 { background: var(--white); box-shadow: var(--shadow); }
+
+    /* ==========================================
+       FOOTER
+       ========================================== */
+    footer {
+      background: var(--black);
+      border-top: var(--border);
+      padding: 60px 24px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .footer-box {
+      background: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 24px 48px;
+      text-align: center;
+    }
+
+    .footer-box p {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.2rem;
+      color: var(--black);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: var(--yellow);
+    }
+
+    .footer-copy {
+      color: #666;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================
+       ADMIN MODAL (Neo-Brutalist)
+       ========================================== */
+    #secretModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #secretModal.open { display: flex; }
+
+    #secretOverlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      cursor: pointer;
+    }
+
+    .modal-box {
+      position: relative;
+      background: var(--white);
+      border: var(--border);
+      box-shadow: 10px 10px 0px var(--black);
+      padding: 40px 36px;
       width: 100%;
+      max-width: 440px;
+      margin: 16px;
+      z-index: 1;
+      animation: popIn 0.15s ease both;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9) translate(10px, 10px); opacity: 0; }
+      to   { transform: scale(1) translate(0,0); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .modal-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--black);
+      border: 3px solid var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--yellow);
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.6rem;
+      color: var(--black);
+    }
+
+    .modal-sub {
+      font-size: 0.88rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      background: var(--black);
+      color: var(--white);
+      border: 3px solid var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.08s;
+    }
+
+    .modal-close:hover { transform: scale(1.1); }
+
+    .modal-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      border: var(--border);
+      background: var(--bg);
+      color: var(--black);
+      outline: none;
+      margin-bottom: 12px;
+      transition: box-shadow 0.1s;
+    }
+
+    .modal-input:focus {
+      box-shadow: 4px 4px 0px var(--black);
+    }
+
+    .modal-input::placeholder { color: #aaa; }
+
+    .modal-btn {
+      width: 100%;
+      padding: 16px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      background: var(--black);
+      color: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modal-btn:hover {
+      transform: translate(4px, 4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .modal-btn:active {
+      transform: translate(6px, 6px);
+      box-shadow: none;
+    }
+
+    .modal-error {
+      background: #FFE5E5;
+      border: 3px solid #FF3333;
+      color: #CC0000;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .modal-success {
+      background: #E5FFF0;
+      border: 3px solid #00AA55;
+      color: #007733;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+
+    .modal-link-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #555;
+      text-decoration: underline;
+      padding: 8px 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-link-btn:hover { color: var(--black); }
+
+    /* ==========================================
+       MARQUEE TICKER
+       ========================================== */
+    .ticker {
+      background: var(--pink);
+      border-top: 3px solid var(--black);
+      border-bottom: 3px solid var(--black);
+      overflow: hidden;
+      padding: 10px 0;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-flex;
+      animation: ticker 20s linear infinite;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.88rem;
+      color: var(--white);
+      letter-spacing: 0.05em;
+    }
+
+    .ticker-inner span {
+      padding: 0 32px;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      #mobileMenuBtn { display: block; }
+
+      nav {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 12px 16px;
+      }
+
+      #mobileMenu.open {
+        display: flex;
+      }
+
+      .hero-title { font-size: 2.6rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-row { gap: 10px; }
+      .stat-card { min-width: 100px; padding: 14px 18px; }
+      .stat-number { font-size: 2rem; }
+    }
+
+    /* ==========================================
+       SCROLL ANIMATION
+       ========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 
-<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 left-0 right-0 z-50 glass dark:glass">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-            AF</div>
-          <div>
-            <div class="font-bold text-white dark:text-white text-sm leading-none">SMPIT Al-Fityan</div>
-            <div class="text-white/70 text-xs">Kelas 8B Ahmad bin Hambal</div>
-          </div>
-        </div>
-        <div class="hidden md:flex items-center gap-6">
-          <a href="/" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Beranda</a>
-          <a href="/assignments.html"
-            class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Tugas</a>
-          <a href="/grades.html"
-            class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Nilai</a>
-          <a href="/chat.html"
-            class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Chat</a>
-          <a href="/forum.html"
-            class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Forum</a>
-          <a href="/kapsul-waktu.html"
-            class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Kapsul Waktu</a>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="darkToggle"
-            class="w-9 h-9 rounded-xl glass text-white flex items-center justify-center hover:scale-110 transition-transform"
-            title="Toggle Dark/Light Mode">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:inline"></i>
-          </button>
-          <button id="adminBtn"
-            class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-semibold transition-all hover:scale-105 glass">
-            <i class="fa-solid fa-lock mr-1"></i>Admin
-          </button>
-          <button class="md:hidden text-white" id="mobileMenuBtn"><i class="fa-solid fa-bars text-xl"></i></button>
-        </div>
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+  <nav id="mainNav">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">AF</div>
+      <div class="nav-title">
+        <span>SMPIT Al-Fityan</span>
+        <span>Kelas 8B Ahmad bin Hambal</span>
       </div>
-    </div>
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden md:hidden glass border-t border-white/10">
-      <div class="px-4 py-3 space-y-2">
-        <a href="/" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Beranda</a>
-        <a href="/assignments.html" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Tugas</a>
-        <a href="/grades.html" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Nilai</a>
-        <a href="/chat.html" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Chat</a>
-        <a href="/forum.html" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Forum</a>
-        <a href="/kapsul-waktu.html" class="block text-white/90 py-2 px-3 rounded-lg hover:bg-white/10">Kapsul Waktu</a>
-      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="/">Beranda</a></li>
+      <li><a href="/assignments.html">Tugas</a></li>
+      <li><a href="/grades.html">Nilai</a></li>
+      <li><a href="/chat.html">Chat</a></li>
+      <li><a href="/forum.html">Forum</a></li>
+      <li><a href="/kapsul-waktu.html">Kapsul Waktu</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button id="adminBtn"><i class="fa-solid fa-lock"></i> Admin</button>
+      <button id="mobileMenuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
     </div>
   </nav>
 
-  <!-- SECRET CODE MODAL -->
-  <div id="secretModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="secretOverlay"></div>
-    <div class="relative glass rounded-3xl p-8 w-full max-w-md mx-4 animate-fadeInUp">
-      <div class="text-center mb-6">
-        <div
-          class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-xl">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-white">Area Terbatas</h2>
-        <p class="text-white/70 mt-1 text-sm">Masukkan kode rahasia untuk melanjutkan</p>
-      </div>
-      <div id="secretStep1">
-        <input id="secretCodeInput" type="password" placeholder="Kode Rahasia..."
-          class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 mb-3 text-center text-lg tracking-widest" />
-        <p id="secretError" class="text-red-400 text-sm text-center mb-3 hidden"></p>
-        <button id="secretSubmit"
-          class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all hover:scale-105">
-          Verifikasi <i class="fa-solid fa-arrow-right ml-1"></i>
-        </button>
-      </div>
-      <div id="secretStep2" class="hidden">
-        <div class="bg-green-500/20 border border-green-500/30 rounded-xl p-3 mb-4 text-center">
-          <i class="fa-solid fa-check-circle text-green-400 mr-2"></i><span class="text-green-300 text-sm">Kode benar!
-            Silakan login.</span>
-        </div>
-        <input id="loginUsername" type="text" placeholder="Username"
-          class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-purple-400 mb-3" />
-        <input id="loginPassword" type="password" placeholder="Password"
-          class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-purple-400 mb-3" />
-        <div id="otcField" class="hidden">
-          <input id="loginOTC" type="text" placeholder="Kode Akses (First Login)"
-            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-purple-400 mb-3" />
-          <p class="text-white/50 text-xs mb-3"><i class="fa-solid fa-info-circle mr-1"></i>Minta kode akses dari Owner
-            terlebih dahulu.</p>
-        </div>
-        <p id="loginError" class="text-red-400 text-sm text-center mb-3 hidden"></p>
-        <button id="loginSubmit"
-          class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all hover:scale-105 mb-2">
-          <i class="fa-solid fa-sign-in-alt mr-2"></i>Login
-        </button>
-        <button id="showOtcBtn" class="w-full py-2 text-white/60 text-sm hover:text-white/90 transition-colors">
-          First login? <span class="underline">Masukkan kode akses</span>
-        </button>
-      </div>
-      <button id="secretClose" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"><i
-          class="fa-solid fa-times text-lg"></i></button>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu">
+    <a href="/">Beranda</a>
+    <a href="/assignments.html">Tugas</a>
+    <a href="/grades.html">Nilai</a>
+    <a href="/chat.html">Chat</a>
+    <a href="/forum.html">Forum</a>
+    <a href="/kapsul-waktu.html">Kapsul Waktu</a>
+  </div>
+
+  <!-- ==========================================
+       TICKER MARQUEE
+       ========================================== -->
+  <div class="ticker" style="margin-top: 68px;">
+    <div class="ticker-inner">
+      <span>📚 SMPIT Al-Fityan 8B Ahmad bin Hambal</span>
+      <span>⭐ Rajin Belajar, Raih Prestasi!</span>
+      <span>🏆 Cek Leaderboard Minggu Ini</span>
+      <span>💬 Gabung Live Chat Sekarang</span>
+      <span>⏳ Kirim Pesan ke Masa Depan di Kapsul Waktu</span>
+      <span>📊 Pantau Nilai & Kumpulkan Poin</span>
+      <span>📚 SMPIT Al-Fityan 8B Ahmad bin Hambal</span>
+      <span>⭐ Rajin Belajar, Raih Prestasi!</span>
+      <span>🏆 Cek Leaderboard Minggu Ini</span>
+      <span>💬 Gabung Live Chat Sekarang</span>
+      <span>⏳ Kirim Pesan ke Masa Depan di Kapsul Waktu</span>
+      <span>📊 Pantau Nilai & Kumpulkan Poin</span>
     </div>
   </div>
 
-  <!-- HERO SECTION -->
-  <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
-    <!-- Floating shapes -->
-    <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float"></div>
-    <div class="absolute top-40 right-20 w-48 h-48 bg-purple-300/20 rounded-full blur-2xl animate-float2"></div>
-    <div class="absolute bottom-20 left-1/4 w-40 h-40 bg-pink-300/20 rounded-full blur-2xl animate-float3"></div>
-    <div class="absolute top-1/3 right-1/4 w-24 h-24 bg-yellow-300/15 rounded-full blur-xl animate-float2"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center relative z-10">
-      <div class="animate-fadeInUp">
-        <span
-          class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-white/90 text-sm font-medium mb-6">
-          <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-          Tahun Ajaran 2025/2026
-        </span>
-        <h1 class="text-5xl md:text-7xl font-black text-white mb-4 leading-tight">
-          Selamat Datang<br />
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-pink-300">Kelas 8B Ahmad bin
-            Hambal</span> 🌟
-        </h1>
-        <p class="text-white/80 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed">
-          SMPIT Al-Fityan — Platform digital satu tempat untuk belajar, berkolaborasi, dan bertumbuh bersama.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="/assignments.html"
-            class="px-8 py-4 bg-white text-purple-700 font-bold rounded-2xl hover:scale-105 transition-transform shadow-2xl text-lg">
-            <i class="fa-solid fa-book-open mr-2"></i>Lihat Tugas
-          </a>
-          <a href="/chat.html"
-            class="px-8 py-4 glass text-white font-bold rounded-2xl hover:scale-105 transition-transform shadow-xl text-lg border border-white/30">
-            <i class="fa-brands fa-discord mr-2"></i>Gabung Chat
-          </a>
-        </div>
+  <!-- ==========================================
+       HERO SECTION
+       ========================================== -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Tahun Ajaran 2025/2026
       </div>
 
-      <!-- Stats pills -->
-      <div class="mt-16 flex flex-wrap justify-center gap-4" id="statsRow">
-        <div class="glass rounded-2xl px-6 py-4 text-white text-center">
-          <div class="text-3xl font-black" id="statStudents">—</div>
-          <div class="text-white/70 text-sm">Siswa Aktif</div>
+      <h1 class="hero-title">
+        Selamat Datang<br />
+        <span class="accent">Kelas 8B Ahmad<br />bin Hambal</span>
+        <span style="font-size:0.6em;vertical-align:middle;"> 🌟</span>
+      </h1>
+
+      <p class="hero-sub">
+        SMPIT Al-Fityan — Platform digital satu tempat untuk belajar,
+        berkolaborasi, dan bertumbuh bersama.
+      </p>
+
+      <div class="hero-cta">
+        <a href="/assignments.html" class="brut-btn btn-primary" id="btn-lihat-tugas">
+          <i class="fa-solid fa-book-open"></i> Lihat Tugas
+        </a>
+        <a href="/chat.html" class="brut-btn btn-secondary" id="btn-gabung-chat">
+          <i class="fa-solid fa-comments"></i> Gabung Chat
+        </a>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card brut-shadow">
+          <div class="stat-number" id="statStudents">—</div>
+          <div class="stat-label">Siswa Aktif</div>
         </div>
-        <div class="glass rounded-2xl px-6 py-4 text-white text-center">
-          <div class="text-3xl font-black" id="statAssignments">—</div>
-          <div class="text-white/70 text-sm">Tugas</div>
+        <div class="stat-card brut-shadow">
+          <div class="stat-number" id="statAssignments">—</div>
+          <div class="stat-label">Tugas</div>
         </div>
-        <div class="glass rounded-2xl px-6 py-4 text-white text-center">
-          <div class="text-3xl font-black text-yellow-300">🏆</div>
-          <div class="text-white/70 text-sm">Poin Aktif</div>
+        <div class="stat-card brut-shadow" style="background: var(--black); color: var(--yellow);">
+          <div class="stat-number" style="color: var(--yellow);">🏆</div>
+          <div class="stat-label" style="color: var(--yellow);">Poin Aktif</div>
         </div>
       </div>
     </div>
 
-    <!-- Wave separator -->
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1200 80" xmlns="http://www.w3.org/2000/svg"
-        class="fill-gray-50 dark:fill-gray-950 transition-colors">
-        <path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80 Z" />
-      </svg>
-    </div>
+    <!-- Decorative block -->
+    <div class="hero-deco">📖</div>
   </section>
 
-  <!-- GALLERY SECTION -->
-  <section class="py-20 bg-gray-50 dark:bg-gray-950 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-      <div class="text-center">
-        <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-2">📸 Galeri Kelas</h2>
-        <p class="text-gray-500 dark:text-gray-400">Momen-momen berharga bersama</p>
-      </div>
+  <!-- ==========================================
+       FEATURES SECTION
+       ========================================== -->
+  <section id="features">
+    <div class="section-header reveal">
+      <div class="section-tag">✨ Fitur Unggulan</div>
+      <h2 class="section-title">Semua yang kamu<br />butuhkan ada di sini</h2>
+      <p class="section-sub">Satu portal, semua kebutuhan kelas tersedia.</p>
     </div>
 
-    <div class="relative">
-      <div class="flex gap-4 gallery-track" id="galleryTrack" style="width: max-content;">
-        <!-- Seeded from JS -->
-      </div>
-    </div>
+    <div class="features-grid">
+      <a href="/assignments.html" class="feature-card brut-card card-tugas reveal" id="card-tugas">
+        <span class="card-icon">📚</span>
+        <h3>Tugas</h3>
+        <p>Pantau semua tugas kelas dengan deadline dan deskripsi lengkap. Jangan sampai terlewat!</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
 
-    <div class="text-center mt-8">
-      <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fa-solid fa-images mr-2"></i>Tambahkan foto via
-        Admin Panel › Gallery Manager</p>
-    </div>
-  </section>
+      <a href="/grades.html" class="feature-card brut-card card-nilai reveal" id="card-nilai">
+        <span class="card-icon">📊</span>
+        <h3>Nilai &amp; Poin</h3>
+        <p>Cek nilai ujian dan kumpulkan poin untuk naik peringkat di leaderboard kelas!</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
 
-  <!-- LEADERBOARD SECTION -->
-  <section class="py-20 bg-white dark:bg-gray-900 relative overflow-hidden" id="leaderboard">
-    <div
-      class="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30">
-    </div>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-2">🏆 Top 5 Leaderboard</h2>
-        <p class="text-gray-500 dark:text-gray-400">Siswa dengan poin tertinggi minggu ini</p>
-      </div>
-      <div id="leaderboardList" class="space-y-4">
-        <!-- Loaded by JS -->
-      </div>
-    </div>
-  </section>
+      <a href="/chat.html" class="feature-card brut-card card-chat reveal" id="card-chat">
+        <span class="card-icon">💬</span>
+        <h3>Live Chat</h3>
+        <p>Chat real-time — tanya soal, berbagi jawaban, atau sekadar ngobrol bareng teman!</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
 
-  <!-- FEATURES SECTION -->
-  <section class="py-20 bg-gray-50 dark:bg-gray-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14">
-        <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-2">✨ Fitur Unggulan</h2>
-        <p class="text-gray-500 dark:text-gray-400">Semua yang kamu butuhkan ada di sini</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="/assignments.html"
-          class="card-hover group block p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <div
-            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            📚</div>
-          <h3 class="text-xl font-bold mb-2 dark:text-white">Tugas</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Pantau semua tugas kelas dengan deadline dan deskripsi
-            lengkap.</p>
-        </a>
-        <a href="/grades.html"
-          class="card-hover group block p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <div
-            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            📊</div>
-          <h3 class="text-xl font-bold mb-2 dark:text-white">Nilai & Poin</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Cek nilai ujian dan kumpulkan poin untuk naik leaderboard!
-          </p>
-        </a>
-        <a href="/chat.html"
-          class="card-hover group block p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <div
-            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            💬</div>
-          <h3 class="text-xl font-bold mb-2 dark:text-white">Live Chat</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Chat real-time ala Discord — tanya soal, berbagi jawaban,
-            atau sekadar ngobrol!</p>
-        </a>
-        <a href="/forum.html"
-          class="card-hover group block p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <div
-            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            🗣️</div>
-          <h3 class="text-xl font-bold mb-2 dark:text-white">Forum Belajar</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Diskusi pelajaran, tips belajar, dan berbagi sumber
-            referensi.</p>
-        </a>
-        <a href="/kapsul-waktu.html"
-          class="card-hover group block p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden">
-          <div
-            class="absolute top-3 right-3 px-2 py-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full text-white text-xs font-bold">
-            NEW</div>
-          <div
-            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            ⏳</div>
-          <h3 class="text-xl font-bold mb-2 dark:text-white">Kapsul Waktu</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Pesan tersegel dari masa lalu yang akan terbuka pada saat yang ditentukan.</p>
-        </a>
-        <div
-          class="card-hover group block p-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl shadow-sm text-white cursor-pointer"
-          id="leaderboardCard">
-          <div
-            class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 transition-transform">
-            🏆</div>
-          <h3 class="text-xl font-bold mb-2">Leaderboard</h3>
-          <p class="text-white/80 text-sm">Siapa yang paling rajin & berprestasi? Lihat peringkat kelasmu!</p>
-        </div>
+      <a href="/forum.html" class="feature-card brut-card card-forum reveal" id="card-forum">
+        <span class="card-icon">🗣️</span>
+        <h3>Forum Belajar</h3>
+        <p>Diskusi pelajaran, tips belajar, dan berbagi sumber referensi bersama teman kelas.</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
+
+      <a href="/kapsul-waktu.html" class="feature-card brut-card card-kapsul reveal" id="card-kapsul">
+        <div class="new-badge">NEW</div>
+        <span class="card-icon">⏳</span>
+        <h3>Kapsul Waktu</h3>
+        <p>Pesan tersegel dari masa lalu yang akan terbuka pada saat yang ditentukan.</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
+
+      <div class="feature-card brut-card card-leader reveal" id="leaderboardCard" style="cursor:pointer;">
+        <span class="card-icon">🏆</span>
+        <h3>Leaderboard</h3>
+        <p>Siapa yang paling rajin &amp; berprestasi? Lihat peringkat kelasmu sekarang!</p>
+        <div class="card-arrow"><i class="fa-solid fa-arrow-down"></i></div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 dark:bg-black text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div
-        class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
-        AF</div>
-      <h3 class="text-xl font-bold mb-1">SMPIT Al-Fityan</h3>
-      <p class="text-gray-400 text-sm mb-4">Kelas 8B Ahmad bin Hambal — Tahun Ajaran 2025/2026</p>
-      <p class="text-gray-600 text-xs">Dibuat dengan ❤️ untuk siswa-siswi terbaik Al-Fityan</p>
+  <!-- ==========================================
+       GALLERY SECTION
+       ========================================== -->
+  <section id="gallery">
+    <div class="section-header reveal">
+      <div class="section-tag" style="background: var(--cyan);">📸 Galeri Kelas</div>
+      <h2 class="section-title" style="color: var(--white);">Momen-momen<br />berharga bersama</h2>
+      <p class="section-sub" style="color: #aaa;">Kenangan indah kelas 8B yang tak terlupakan.</p>
+    </div>
+
+    <div class="gallery-wrapper">
+      <div class="gallery-track" id="galleryTrack">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <p class="gallery-caption">
+      <i class="fa-solid fa-images"></i>
+      Tambahkan foto via Admin Panel › Gallery Manager
+    </p>
+  </section>
+
+  <!-- ==========================================
+       LEADERBOARD SECTION
+       ========================================== -->
+  <section id="leaderboard">
+    <div class="section-header reveal">
+      <div class="section-tag" style="background: var(--orange); color: var(--white);">🏆 Top 5 Leaderboard</div>
+      <h2 class="section-title">Siapa yang paling<br />berprestasi minggu ini?</h2>
+      <p class="section-sub">Poin tertinggi = raja kelas. Rajin-rajinlah mengumpulkan poin!</p>
+    </div>
+
+    <div class="leaderboard-inner">
+      <div id="leaderboardList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-box reveal">
+        <p>Dibuat dengan ❤️ untuk siswa-siswi terbaik Al-Fityan</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="/">Beranda</a>
+        <a href="/assignments.html">Tugas</a>
+        <a href="/grades.html">Nilai</a>
+        <a href="/chat.html">Chat</a>
+        <a href="/forum.html">Forum</a>
+        <a href="/kapsul-waktu.html">Kapsul Waktu</a>
+      </div>
+
+      <p class="footer-copy">SMPIT Al-Fityan — Kelas 8B Ahmad bin Hambal — Tahun Ajaran 2025/2026</p>
     </div>
   </footer>
 
+  <!-- ==========================================
+       ADMIN MODAL
+       ========================================== -->
+  <div id="secretModal">
+    <div id="secretOverlay"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="secretClose" aria-label="Tutup modal">
+        <i class="fa-solid fa-times"></i>
+      </button>
+
+      <div class="modal-header">
+        <div class="modal-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <div class="modal-title">Area Terbatas</div>
+          <div class="modal-sub">Masukkan kode rahasia untuk melanjutkan</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Secret Code -->
+      <div id="secretStep1">
+        <input id="secretCodeInput" type="password" placeholder="Kode Rahasia..." class="modal-input"
+          autocomplete="off" />
+        <div id="secretError" class="modal-error"></div>
+        <button id="secretSubmit" class="modal-btn">
+          Verifikasi <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Step 2: Login -->
+      <div id="secretStep2" style="display:none;">
+        <div class="modal-success">
+          <i class="fa-solid fa-check-circle"></i> Kode benar! Silakan login.
+        </div>
+        <input id="loginUsername" type="text" placeholder="Username" class="modal-input" />
+        <input id="loginPassword" type="password" placeholder="Password" class="modal-input" />
+        <div id="otcField" style="display:none;">
+          <input id="loginOTC" type="text" placeholder="Kode Akses (First Login)" class="modal-input" />
+          <p style="font-size:0.82rem;color:#888;font-weight:600;margin-bottom:10px;">
+            <i class="fa-solid fa-info-circle"></i> Minta kode akses dari Owner terlebih dahulu.
+          </p>
+        </div>
+        <div id="loginError" class="modal-error"></div>
+        <button id="loginSubmit" class="modal-btn" style="margin-bottom:8px;">
+          <i class="fa-solid fa-sign-in-alt"></i> Login
+        </button>
+        <button id="showOtcBtn" class="modal-link-btn">
+          First login? <span style="text-decoration:underline;">Masukkan kode akses</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       JAVASCRIPT
+       ========================================== -->
   <script>
-    // Dark mode
-    const root = document.documentElement;
-    const darkToggle = document.getElementById('darkToggle');
-    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.classList.add('dark');
-    }
-    darkToggle.addEventListener('click', () => {
-      root.classList.toggle('dark');
-      localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+    // ─── Mobile Menu ──────────────────────────────────────────────────────────
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
     });
 
-    // Mobile menu
-    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.toggle('hidden');
-    });
+    // ─── Admin Modal ──────────────────────────────────────────────────────────
+    function openModal() { document.getElementById('secretModal').classList.add('open'); }
+    function closeModal() { document.getElementById('secretModal').classList.remove('open'); }
 
-    // Admin modal
-    document.getElementById('adminBtn').addEventListener('click', () => {
-      document.getElementById('secretModal').classList.remove('hidden');
-    });
+    document.getElementById('adminBtn').addEventListener('click', openModal);
     document.getElementById('secretClose').addEventListener('click', closeModal);
     document.getElementById('secretOverlay').addEventListener('click', closeModal);
-    function closeModal() { document.getElementById('secretModal').classList.add('hidden'); }
 
     document.getElementById('secretSubmit').addEventListener('click', async () => {
       const code = document.getElementById('secretCodeInput').value;
       const btn = document.getElementById('secretSubmit');
-      btn.disabled = true; btn.textContent = 'Memeriksa...';
-      const r = await fetch('/auth/secret-check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
-      const d = await r.json();
-      if (d.success) {
-        document.getElementById('secretStep1').classList.add('hidden');
-        document.getElementById('secretStep2').classList.remove('hidden');
-      } else {
-        document.getElementById('secretError').textContent = d.message;
-        document.getElementById('secretError').classList.remove('hidden');
+      const errEl = document.getElementById('secretError');
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memeriksa...';
+
+      try {
+        const r = await fetch('/auth/secret-check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+        const d = await r.json();
+        if (d.success) {
+          document.getElementById('secretStep1').style.display = 'none';
+          document.getElementById('secretStep2').style.display = 'block';
+        } else {
+          errEl.textContent = d.message;
+          errEl.style.display = 'block';
+        }
+      } catch (e) {
+        errEl.textContent = 'Gagal terhubung ke server.';
+        errEl.style.display = 'block';
       }
-      btn.disabled = false; btn.innerHTML = 'Verifikasi <i class="fa-solid fa-arrow-right ml-1"></i>';
+      btn.disabled = false;
+      btn.innerHTML = 'Verifikasi <i class="fa-solid fa-arrow-right"></i>';
     });
-    document.getElementById('secretCodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('secretSubmit').click(); });
+
+    document.getElementById('secretCodeInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('secretSubmit').click();
+    });
 
     document.getElementById('showOtcBtn').addEventListener('click', () => {
-      document.getElementById('otcField').classList.toggle('hidden');
+      const otc = document.getElementById('otcField');
+      otc.style.display = otc.style.display === 'none' ? 'block' : 'none';
     });
 
     document.getElementById('loginSubmit').addEventListener('click', async () => {
@@ -449,76 +1385,145 @@
       const password = document.getElementById('loginPassword').value;
       const one_time_code = document.getElementById('loginOTC').value;
       const btn = document.getElementById('loginSubmit');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading...';
-      const r = await fetch('/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, one_time_code }) });
-      const d = await r.json();
-      if (d.success) {
-        window.location.href = d.redirect;
-      } else {
-        document.getElementById('loginError').textContent = d.message;
-        document.getElementById('loginError').classList.remove('hidden');
+      const errEl = document.getElementById('loginError');
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+
+      try {
+        const r = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, one_time_code })
+        });
+        const d = await r.json();
+        if (d.success) {
+          window.location.href = d.redirect;
+        } else {
+          errEl.textContent = d.message;
+          errEl.style.display = 'block';
+        }
+      } catch (e) {
+        errEl.textContent = 'Gagal terhubung ke server.';
+        errEl.style.display = 'block';
       }
-      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-sign-in-alt mr-2"></i>Login';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-sign-in-alt"></i> Login';
     });
 
-    // Load leaderboard
-    async function loadLeaderboard() {
-      const r = await fetch('/api/leaderboard');
-      const data = await r.json();
-      const rankEmojis = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
-      const rankClasses = ['rank-1', 'rank-2', 'rank-3', 'rank-4', 'rank-5'];
-      document.getElementById('leaderboardList').innerHTML = data.map((s, i) => `
-      <div class="flex items-center gap-4 p-5 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 card-hover">
-        <div class="${rankClasses[i]} w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">${i + 1}</div>
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm" style="background:${s.avatar_color}">${s.name.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
-        <div class="flex-1">
-          <div class="font-bold dark:text-white">${s.name}</div>
-          <div class="text-gray-500 dark:text-gray-400 text-sm">NIS: ${s.nis}</div>
-        </div>
-        <div class="text-right">
-          <div class="text-2xl font-black text-purple-600 dark:text-purple-400">${s.points.toLocaleString()}</div>
-          <div class="text-gray-400 text-xs">poin</div>
-        </div>
-        <div class="text-2xl">${rankEmojis[i]}</div>
-      </div>
-    `).join('');
-    }
-    loadLeaderboard();
-
-    // Load stats
+    // ─── Stats ────────────────────────────────────────────────────────────────
     async function loadStats() {
-      const [s, a] = await Promise.all([fetch('/api/students'), fetch('/api/assignments')]);
-      const students = await s.json();
-      const assignments = await a.json();
-      document.getElementById('statStudents').textContent = students.length;
-      document.getElementById('statAssignments').textContent = assignments.length;
+      try {
+        const [s, a] = await Promise.all([fetch('/api/students'), fetch('/api/assignments')]);
+        const students = await s.json();
+        const assignments = await a.json();
+        animateCount('statStudents', students.length);
+        animateCount('statAssignments', assignments.length);
+      } catch (e) { /* server might be offline in dev */ }
     }
+
+    function animateCount(id, target) {
+      const el = document.getElementById(id);
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 30));
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(interval);
+      }, 40);
+    }
+
     loadStats();
 
-    // Load gallery
-    async function loadGallery() {
-      const r = await fetch('/api/gallery');
-      const images = await r.json();
-      const track = document.getElementById('galleryTrack');
-      if (images.length === 0) {
-        track.innerHTML = '<div class="text-gray-400 text-center py-8 px-16">Belum ada foto. Upload via Admin › Gallery Manager.</div>';
-        return;
+    // ─── Leaderboard ──────────────────────────────────────────────────────────
+    async function loadLeaderboard() {
+      try {
+        const r = await fetch('/api/leaderboard');
+        const data = await r.json();
+        const rankEmojis = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+
+        document.getElementById('leaderboardList').innerHTML = data.map((s, i) => {
+          const initials = s.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+          return `
+            <div class="lb-row lb-row-${i + 1}" style="box-shadow: var(--shadow);">
+              <div class="lb-rank">${rankEmojis[i]}</div>
+              <div class="lb-avatar" style="background:${s.avatar_color || '#FFE033'};">${initials}</div>
+              <div class="lb-info">
+                <div class="lb-name">${s.name}</div>
+                <div class="lb-nis">NIS: ${s.nis}</div>
+              </div>
+              <div class="lb-points">
+                <div class="lb-points-num">${s.points.toLocaleString()}</div>
+                <div class="lb-points-label">poin</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        document.getElementById('leaderboardList').innerHTML =
+          '<p style="text-align:center;color:#aaa;font-weight:600;padding:40px;">Leaderboard belum tersedia.</p>';
       }
-      const items = images.map(img => `
-      <div class="flex-none w-64 h-48 rounded-2xl overflow-hidden shadow-lg relative group">
-        <img src="/uploads/gallery/${img.filename}" alt="${img.caption}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-          <p class="text-white text-sm font-medium">${img.caption || ''}</p>
-        </div>
-      </div>
-    `).join('');
-      // Duplicate for infinite scroll
-      track.innerHTML = items + items;
     }
+
+    loadLeaderboard();
+
+    // ─── Gallery ──────────────────────────────────────────────────────────────
+    async function loadGallery() {
+      const track = document.getElementById('galleryTrack');
+      try {
+        const r = await fetch('/api/gallery');
+        const images = await r.json();
+        if (!images.length) {
+          track.parentElement.innerHTML = `
+            <div class="gallery-empty">
+              <p>📷 Belum ada foto. Upload via Admin › Gallery Manager.</p>
+            </div>
+          `;
+          return;
+        }
+        const items = images.map(img => `
+          <div class="gallery-item">
+            <img src="/uploads/gallery/${img.filename}" alt="${img.caption || 'Galeri Kelas'}" loading="lazy" />
+          </div>
+        `).join('');
+        track.innerHTML = items + items; // duplicate for infinite scroll
+      } catch (e) {
+        track.parentElement.innerHTML = `
+          <div class="gallery-empty">
+            <p>📷 Belum ada foto. Upload via Admin › Gallery Manager.</p>
+          </div>
+        `;
+      }
+    }
+
     loadGallery();
 
+    // ─── Leaderboard card scroll ──────────────────────────────────────────────
     document.getElementById('leaderboardCard').addEventListener('click', () => {
       document.getElementById('leaderboard').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // ─── Scroll Reveal ────────────────────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ─── Navbar scroll effect ─────────────────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('mainNav');
+      if (window.scrollY > 20) {
+        nav.style.borderBottomWidth = '4px';
+        nav.style.borderBottomColor = '#FFE033';
+      } else {
+        nav.style.borderBottomColor = '#FFE033';
+      }
     });
   </script>
 </body>
